@@ -1,8 +1,15 @@
 <script lang="ts">
-  import { Canvas } from '@threlte/core'
-  import { World } from '@threlte/rapier'
-  import Scene from './Scene.svelte'
+  import { Canvas } from '@threlte/core';
+  import { World } from '@threlte/rapier';
+  import Scene from './Scene.svelte';
   import * as Dialog from "$lib/components/ui/dialog";
+  import * as Select from "$lib/components/ui/select";
+
+  import { writable } from 'svelte/store';
+
+  export const selectedTheme = writable('QWERTY');
+
+  $: console.log($selectedTheme);
 
 </script>
 
@@ -16,16 +23,20 @@
           <Dialog.Description>
             <div class="grid grid-cols-2 pt-5">
               <div>
-                <h3 class="text-xl flex justify-center py-2">Keyboard</h3>
-                  <div class="mx-14">
-
-                  </div>
-                </div>
+                <Select.Root bind:selected={$selectedTheme}>
+                  <Select.Trigger class="w-[180px]">
+                    <Select.Value placeholder={$selectedTheme} />
+                  </Select.Trigger>
+                  <Select.Content>
+                    <Select.Item value="AZERTY" label="AZERTY">AZERTY</Select.Item>
+                    <Select.Item value="QWERTY" lable="QWERTY">QWERTY</Select.Item>
+                  </Select.Content>
+                </Select.Root>
+              </div>
               <div>
-              <!-- Second column content -->
+                <!-- Second column content -->
               </div>
             </div>
-
           </Dialog.Description>
         </Dialog.Header>
       </Dialog.Content>
