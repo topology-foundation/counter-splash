@@ -5,6 +5,7 @@
     import { onDestroy } from 'svelte'
     import { PerspectiveCamera, Vector3 } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
+    import { selectedKeyboard } from '$lib/store'
   
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
@@ -48,42 +49,61 @@
       const pos = rigidBody.translation()
       position = [pos.x, pos.y, pos.z]
     })
+
+
+    const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; }; azerty?: { forward: string; backward: string; left: string; right: string; }; } = {
+      qwerty: {
+        forward: 'w',
+        backward: 's',
+        left: 'a',
+        right: 'd'
+      },
+      azerty: {
+        forward: 'z',
+        backward: 's',
+        left: 'q',
+        right: 'd'
+      },
+      // Add other keyboard layouts here
+    }
   
     function onKeyDown(e: KeyboardEvent) {
+      const mapping = keyMapping[$selectedKeyboard];
       switch (e.key) {
-        case 's':
-          backward = 1
-          break
-        case 'w':
-          forward = 1
-          break
-        case 'a':
-          left = 1
-          break
-        case 'd':
-          right = 1
-          break
+        case mapping.backward:
+          backward = 1;
+          break;
+        case mapping.forward:
+          forward = 1;
+          break;
+        case mapping.left:
+          left = 1;
+          break;
+        case mapping.right:
+          right = 1;
+          break;
         default:
-          break
+          break;
       }
     }
   
     function onKeyUp(e: KeyboardEvent) {
+      const mapping = keyMapping[$selectedKeyboard]; 
       switch (e.key) {
-        case 's':
-          backward = 0
-          break
-        case 'w':
-          forward = 0
-          break
-        case 'a':
-          left = 0
-          break
-        case 'd':
-          right = 0
-          break
+        case mapping.backward:
+          backward = 0;
+          break;
+        case mapping.forward:
+          forward = 0;
+          break;
+        case mapping.left:
+          left = 0;
+          break;
+        case mapping.right:
+          right = 0;
+          break;
         default:
-          break
+          break;
       }
     }
   </script>
