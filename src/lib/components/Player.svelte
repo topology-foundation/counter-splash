@@ -11,7 +11,8 @@
     let radius = 0.3
     let height = 1.7
     export let speed = 6
-  
+    let jumpForce = 5;
+
     let rigidBody: RapierRigidBody
     let lock: () => void
     let cam: PerspectiveCamera
@@ -20,7 +21,8 @@
     let backward = 0
     let left = 0
     let right = 0
-  
+    let jump = false;
+
     const t = new Vector3()
   
     const lockControls = () => lock()
@@ -42,6 +44,10 @@
       // don't override falling velocity
       const linVel = rigidBody.linvel()
       t.y = linVel.y
+      if (jump) {
+        t.y = jumpForce;
+        jump = false;
+      }
       // finally set the velocities and wake up the body
       rigidBody.setLinvel(t, true)
   
@@ -51,18 +57,20 @@
     })
 
 
-    const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; }; azerty?: { forward: string; backward: string; left: string; right: string; }; } = {
+    const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; jump: string }; azerty?: { forward: string; backward: string; left: string; right: string; jump: string }; } = {
       qwerty: {
         forward: 'w',
         backward: 's',
         left: 'a',
-        right: 'd'
+        right: 'd',
+        jump: ' '
       },
       azerty: {
         forward: 'z',
         backward: 's',
         left: 'q',
-        right: 'd'
+        right: 'd',
+        jump: ' '
       },
       // Add other keyboard layouts here
     }
@@ -81,6 +89,9 @@
           break;
         case mapping.right:
           right = 1;
+          break;
+        case mapping.jump:
+          jump = true;
           break;
         default:
           break;
