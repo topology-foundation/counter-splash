@@ -3,10 +3,10 @@
     import { T, useTask, useThrelte } from '@threlte/core'
     import { RigidBody, CollisionGroups, Collider } from '@threlte/rapier'
     import { onDestroy } from 'svelte'
-    import { PerspectiveCamera, Vector3 } from 'three'
+    import { PerspectiveCamera, Vector3, Raycaster } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store'
-  
+
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
     let height = 1.7
@@ -27,13 +27,16 @@
   
     const lockControls = () => lock()
   
-    const { renderer } = useThrelte()
+  const { renderer, scene } = useThrelte()
   
     renderer.domElement.addEventListener('click', lockControls)
   
     onDestroy(() => {
       renderer.domElement.removeEventListener('click', lockControls)
     })
+
+    const raycaster = new Raycaster()
+    let touchingGround = false
   
     useTask(() => {
       if (!rigidBody) return
@@ -44,7 +47,7 @@
       // don't override falling velocity
       const linVel = rigidBody.linvel()
       t.y = linVel.y
-      if (jump) {
+      if (jump && touchingGround) {
         t.y = jumpForce;
         jump = false;
       }
@@ -54,6 +57,14 @@
       // when body position changes update position prop for camera
       const pos = rigidBody.translation()
       position = [pos.x, pos.y, pos.z]
+
+      raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0))
+        const intersects = raycaster.intersectObject(scene, true)
+        if (intersects.length > 0 && intersects[0].distance < height / 2 + 0.1) {
+          touchingGround = true
+        } else {
+          touchingGround = false
+        }
     })
 
 
@@ -112,6 +123,9 @@
           break;
         case mapping.right:
           right = 0;
+          break;
+        case mapping.jump:
+          jump = false;
           break;
         default:
           break;
