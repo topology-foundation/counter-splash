@@ -3,15 +3,16 @@
     import { T, useTask, useThrelte } from '@threlte/core'
     import { RigidBody, CollisionGroups, Collider } from '@threlte/rapier'
     import { onDestroy } from 'svelte'
-    import { PerspectiveCamera, Vector3 } from 'three'
+    import { PerspectiveCamera, Vector3, Raycaster } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store'
-  
+
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
     let height = 1.7
     export let speed = 6
-  
+    let jumpForce = 5;
+
     let rigidBody: RapierRigidBody
     let lock: () => void
     let cam: PerspectiveCamera
@@ -20,18 +21,22 @@
     let backward = 0
     let left = 0
     let right = 0
-  
+    let jump = false;
+
     const t = new Vector3()
   
     const lockControls = () => lock()
   
-    const { renderer } = useThrelte()
+  const { renderer, scene } = useThrelte()
   
     renderer.domElement.addEventListener('click', lockControls)
   
     onDestroy(() => {
       renderer.domElement.removeEventListener('click', lockControls)
     })
+
+    const raycaster = new Raycaster()
+    let touchingGround = false
   
     useTask(() => {
       if (!rigidBody) return
@@ -42,27 +47,41 @@
       // don't override falling velocity
       const linVel = rigidBody.linvel()
       t.y = linVel.y
+      if (jump && touchingGround) {
+        t.y = jumpForce;
+        jump = false;
+      }
       // finally set the velocities and wake up the body
       rigidBody.setLinvel(t, true)
   
       // when body position changes update position prop for camera
       const pos = rigidBody.translation()
       position = [pos.x, pos.y, pos.z]
+
+      raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0))
+        const intersects = raycaster.intersectObject(scene, true)
+        if (intersects.length > 0 && intersects[0].distance < height / 2 + 0.1) {
+          touchingGround = true
+        } else {
+          touchingGround = false
+        }
     })
 
 
-    const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; }; azerty?: { forward: string; backward: string; left: string; right: string; }; } = {
+    const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; jump: string }; azerty?: { forward: string; backward: string; left: string; right: string; jump: string }; } = {
       qwerty: {
         forward: 'w',
         backward: 's',
         left: 'a',
-        right: 'd'
+        right: 'd',
+        jump: ' '
       },
       azerty: {
         forward: 'z',
         backward: 's',
         left: 'q',
-        right: 'd'
+        right: 'd',
+        jump: ' '
       },
       // Add other keyboard layouts here
     }
@@ -81,6 +100,9 @@
           break;
         case mapping.right:
           right = 1;
+          break;
+        case mapping.jump:
+          jump = true;
           break;
         default:
           break;
@@ -101,6 +123,9 @@
           break;
         case mapping.right:
           right = 0;
+          break;
+        case mapping.jump:
+          jump = false;
           break;
         default:
           break;
