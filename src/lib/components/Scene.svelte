@@ -6,6 +6,7 @@
   import { BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from 'three'
   import Player from './Player.svelte'
   import Ground from './map/Ground.svelte'
+  import SplashWall from './map/SplashWall.svelte';
 
   let playerMesh: Mesh
   let positionHasBeenSet = false
@@ -42,6 +43,7 @@
 />
 
 <CollisionGroups groups={[0, 15]}>
+  <SplashWall />
   <Ground />
 </CollisionGroups>
 
