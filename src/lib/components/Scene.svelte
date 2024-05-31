@@ -49,7 +49,6 @@
 
 <CollisionGroups groups={[0]}>
   <Player
-    bind:playerMesh
     position={[0, 2, 3]}
   />
 

@@ -1,6 +1,6 @@
 import { updatePixels } from "./store";
 
-export function generateRandomPixels(width, height, count) {
+export function generateRandomPixels(width: number, height: number, count: number) {
   const updates = [];
   for (let i = 0; i < count; i++) {
     const x = Math.floor(Math.random() * width);

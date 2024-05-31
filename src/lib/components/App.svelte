@@ -7,7 +7,7 @@
   import * as Select from "$lib/components/ui/select";
   import { selectedKeyboard } from '$lib/store'; 
 
-  let keyboard;
+  let keyboard : any
 
   onMount(() => {
     selectedKeyboard.subscribe(value => {

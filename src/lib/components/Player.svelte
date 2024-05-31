@@ -157,7 +157,6 @@
   <T.Group {position}>
     <RigidBody
       bind:rigidBody
-      {position}
       enabledRotations={[false, false, false]}
     >
       <CollisionGroups groups={[0]}>

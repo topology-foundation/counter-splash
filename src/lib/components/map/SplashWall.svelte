@@ -6,8 +6,8 @@
     import { generateRandomPixels } from '$lib/handler';
 
 
-    let canvas;
-    let context;
+    let canvas: HTMLCanvasElement;
+    let context: CanvasRenderingContext2D | null;
 
     const width = 1000;
     const height = 1000;
@@ -16,12 +16,14 @@
         context = canvas.getContext('2d');
 
         const unsubscribe = pixels.subscribe(value => {
-        context.clearRect(0, 0, width, height);
-        for (const [key, color] of Object.entries(value)) {
-            const [x, y] = key.split(',').map(Number);
-            context.fillStyle = color;
-            context.fillRect(x, y, 1, 1);
-        }
+            if (context) {
+                context.clearRect(0, 0, width, height);
+                for (const [key, color] of Object.entries(value)) {
+                    const [x, y] = key.split(',').map(Number);
+                    context.fillStyle = color as string;
+                    context.fillRect(x, y, 1, 1);
+                }
+            }
         });
 
         generateRandomPixels(width, height, 5000);
