@@ -38,9 +38,7 @@
     }
   
     export const lock = () =>
-      domElement.requestPointerLock({
-        unadjustedMovement: true
-      })
+      domElement.requestPointerLock()
     export const unlock = () => document.exitPointerLock()
   
     domElement.addEventListener('mousemove', onMouseMove)
