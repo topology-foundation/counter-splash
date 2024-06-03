@@ -5,7 +5,7 @@
     import { AutoColliders } from '@threlte/rapier'
     import * as THREE from 'three';
     import { get } from 'svelte/store';
-    import { generateRandomPixels } from '$lib/handler';
+    import { generateRandomPixels, initPixelToImage } from '$lib/handler';
 
 
     let texture : any;
@@ -23,13 +23,15 @@
             texture.image.data.set(pixelData);
             texture.needsUpdate = true;
         });
-        generateRandomPixels(width, height, width * height * 4);
+        initPixelToImage('/DrawHere.png')
+        //generateRandomPixels(width, height, width * height * 4);
+        
     });
 </script>
 
 <T.Group position={[0, 27, -50]}>
         <AutoColliders shape={'cuboid'}>
-        <T.Mesh>
+        <T.Mesh name="SplashWall">
             <T.PlaneGeometry args={[100, 80]} />
             <T.MeshBasicMaterial map={texture} />
         </T.Mesh>
