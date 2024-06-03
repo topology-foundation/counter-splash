@@ -5,7 +5,7 @@
   import Scene from './Scene.svelte';
   import * as Dialog from "$lib/components/ui/dialog";
   import * as Select from "$lib/components/ui/select";
-  import { selectedKeyboard } from '$lib/store'; 
+  import { selectedKeyboard } from '$lib/store/settings'; 
 
   let keyboard : any
 

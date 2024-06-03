@@ -1,7 +1,7 @@
 <script lang="ts">
     import { T } from '@threlte/core'
     import { HTML } from '@threlte/extras'
-    import { pixels } from '$lib/store'
+    import { pixels } from '$lib/store/wall'
     import { onMount } from 'svelte';
     import { generateRandomPixels } from '$lib/handler';
 

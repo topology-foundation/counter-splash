@@ -1,7 +1,6 @@
 import { writable } from 'svelte/store';
 import { throttle } from 'lodash-es';
 
-export const selectedKeyboard = writable<string>('qwerty');
 
 interface PixelData {
   [key: string]: string;

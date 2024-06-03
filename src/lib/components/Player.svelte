@@ -5,7 +5,7 @@
     import { onDestroy } from 'svelte'
     import { PerspectiveCamera, Vector3, Raycaster } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
-    import { selectedKeyboard } from '$lib/store'
+    import { selectedKeyboard } from '$lib/store/settings'
 
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3

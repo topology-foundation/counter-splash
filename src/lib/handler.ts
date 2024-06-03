@@ -1,4 +1,4 @@
-import { updatePixels } from "./store";
+import { updatePixels } from "./store/wall";
 
 export function generateRandomPixels(width: number, height: number, count: number) {
   const updates = [];
