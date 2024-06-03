@@ -3,7 +3,9 @@
     import { HTML } from '@threlte/extras'
     import { pixels } from '$lib/store/wall'
     import { onMount } from 'svelte';
+    import { AutoColliders } from '@threlte/rapier'
     import { generateRandomPixels } from '$lib/handler';
+  import { Box } from 'lucide-svelte';
 
 
     let canvas: HTMLCanvasElement;
@@ -34,14 +36,15 @@
     });
 </script>
 
-<T.Mesh
-    position.y={0.5}
->
-    <HTML
-        position.y={37}
-        position.z={-50}
-        transform
-    >
-        <canvas bind:this={canvas} width={width} height={height} class="bg-white"></canvas>
-    </HTML>
-</T.Mesh>
+<T.Group position={[0, 27, -50]}>
+        <AutoColliders shape={'cuboid'}>
+        <T.Mesh>
+            <T.BoxGeometry args={[100, 80, 1]} />
+            <HTML
+                transform
+            >
+                <canvas bind:this={canvas} width={width} height={height} class="bg-white"></canvas>
+            </HTML>
+        </T.Mesh>
+    </AutoColliders>
+</T.Group>
