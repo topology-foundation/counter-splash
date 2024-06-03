@@ -9,8 +9,8 @@
     let canvas: HTMLCanvasElement;
     let context: CanvasRenderingContext2D | null;
 
-    const width = 1000;
-    const height = 1000;
+    const width = 4000;
+    const height = 3000;
 
     onMount(() => {
         context = canvas.getContext('2d');
@@ -26,7 +26,7 @@
             }
         });
 
-        generateRandomPixels(width, height, 5000);
+        generateRandomPixels(width, height, 50000);
 
         return () => {
         unsubscribe();
@@ -38,8 +38,8 @@
     position.y={0.5}
 >
     <HTML
-        position.y={1.25}
-        position.z={-10}
+        position.y={37}
+        position.z={-50}
         transform
     >
         <canvas bind:this={canvas} width={width} height={height} class="bg-white"></canvas>
