@@ -95,12 +95,12 @@
       const wallIntersects = raycaster.intersectObjects(scene.children, true);
 
       const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
-      if ( intersectsWithSplashWall && dot.material instanceof MeshBasicMaterial) {
+      const distance = intersectsWithSplashWall?.distance || 1000;
+      if (intersectsWithSplashWall && distance < 10 && dot.material instanceof MeshBasicMaterial) {
         dot.material.color.set(0xff0000);
 
       // Get the UV coordinates of the intersection point
-      const uv = intersectsWithSplashWall.uv;
-
+      const uv = intersectsWithSplashWall.uv;      
       if(isMouseDown && uv) {
         // Convert the UV coordinates to pixel coordinates
         const x = Math.floor(uv?.x * 4000);

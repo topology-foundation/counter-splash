@@ -7,7 +7,8 @@
   import Player from './Player.svelte'
   import Ground from './map/Ground.svelte'
   import SplashWall from './map/SplashWall.svelte';
-
+  import PaintPlatforms from './map/PaintPlatforms.svelte'
+    import ObstacleObjects from './map/ObstacleObjects.svelte';
   let playerMesh: Mesh
   let positionHasBeenSet = false
   const smoothPlayerPosX = spring(0)
@@ -44,12 +45,14 @@
 
 <CollisionGroups groups={[0, 15]}>
   <SplashWall />
+  <PaintPlatforms />
+  <ObstacleObjects />
   <Ground />
 </CollisionGroups>
 
 <CollisionGroups groups={[0]}>
   <Player
-    position={[0, 2, 3]}
+    position={[0, 57, 0]}
   />
 
 </CollisionGroups>
