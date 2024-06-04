@@ -1,8 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy } from 'svelte'
-    import { Euler, Camera } from 'three'
+    import { Euler, Camera, Quaternion } from 'three'
     import { useThrelte, useParent } from '@threlte/core'
     import { paintMode } from '$lib/store/settings'
+    import TWEEN, { Tween, Easing } from '@tweenjs/tween.js'
   
     // Set to constrain the pitch of the camera
     // Range is 0 to Math.PI radians
@@ -40,8 +41,8 @@
   
     export const lock = () =>
       domElement.requestPointerLock()
-    export const unlock = () => document.exitPointerLock()
-  
+      export const unlock = () => document.exitPointerLock()
+
     domElement.addEventListener('mousemove', onMouseMove)
     domElement.addEventListener('mousedown', onMouseDown)
     domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange)
@@ -49,7 +50,7 @@
   
     onDestroy(() => {
       domElement.removeEventListener('mousemove', onMouseMove)
-      domElement.removeEventListener('mousedown', onMouseDown) 
+      domElement.removeEventListener('mousedown', onMouseDown)
       domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange)
       domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError)
     })
@@ -75,11 +76,11 @@
     function onPointerlockChange() {
       if (document.pointerLockElement === domElement) {
         dispatch('lock')
+        paintMode.set(false)
         isLocked = true
       } else {
         dispatch('unlock')
         isLocked = false
-        paintMode.set(false)
       }
     }
   
@@ -88,14 +89,35 @@
     }
 
     function onMouseDown(event: MouseEvent) {
-      if (event.button === 0) { 
-        unlock()
+      if (event.button === 0) {
+        if (!isLocked) return
         paintMode.set(true)
-        if ($camera) {
-          $camera.rotation.set(0, 0, 0)
-          $camera.quaternion.setFromEuler(new Euler(0, 0, 0, 'YXZ'))
-        }
+        unlock()
+        pointCameraToXAxis()
       }
     }
-  </script>
   
+    function pointCameraToXAxis() {
+      if (!$camera) return
+  
+      const initialQuaternion = $camera.quaternion.clone()
+      const targetEuler = new Euler(0, 0, 0, 'YXZ')
+      const targetQuaternion = new Quaternion().setFromEuler(targetEuler)
+  
+      new Tween(initialQuaternion)
+        .to(targetQuaternion, 500) 
+        .easing(Easing.Quadratic.InOut)
+        .onUpdate(() => {
+          $camera.quaternion.copy(initialQuaternion)
+          onChange()
+        })
+        .start()
+    }
+  
+    function animate(time: number) {
+      requestAnimationFrame(animate)
+      TWEEN.update(time)
+    }
+  
+    animate(0)
+</script>

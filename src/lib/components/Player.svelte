@@ -156,7 +156,7 @@
     }
   
     function onKeyDown(e: KeyboardEvent) {
-      if (!$paintMode) return;
+      if ($paintMode) return;
       const mapping = keyMapping[$selectedKeyboard];
       switch (e.key) {
         case mapping.backward:
