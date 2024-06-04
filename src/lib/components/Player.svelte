@@ -5,7 +5,7 @@
     import { onDestroy, onMount } from 'svelte'
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
-    import { selectedKeyboard } from '$lib/store/settings'
+    import { selectedKeyboard, paintMode } from '$lib/store/settings'
     import { updatePixels } from '$lib/store/wall';
     import { setCanPaint } from '$lib/store/player';
 
@@ -156,6 +156,7 @@
     }
   
     function onKeyDown(e: KeyboardEvent) {
+      if (!$paintMode) return;
       const mapping = keyMapping[$selectedKeyboard];
       switch (e.key) {
         case mapping.backward:
