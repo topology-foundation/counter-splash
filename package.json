@@ -33,6 +33,7 @@
     "@threlte/extras": "^8.11.2",
     "@threlte/rapier": "^2.0.0",
     "@threlte/theatre": "^2.1.7",
+    "@tweenjs/tween.js": "^23.1.2",
     "bits-ui": "^0.21.10",
     "clsx": "^2.1.1",
     "cmdk-sv": "^0.0.17",
