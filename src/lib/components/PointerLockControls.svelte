@@ -2,6 +2,7 @@
     import { createEventDispatcher, onDestroy } from 'svelte'
     import { Euler, Camera } from 'three'
     import { useThrelte, useParent } from '@threlte/core'
+    import { paintMode } from '$lib/store/settings'
   
     // Set to constrain the pitch of the camera
     // Range is 0 to Math.PI radians
@@ -42,11 +43,13 @@
     export const unlock = () => document.exitPointerLock()
   
     domElement.addEventListener('mousemove', onMouseMove)
+    domElement.addEventListener('mousedown', onMouseDown)
     domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange)
     domElement.ownerDocument.addEventListener('pointerlockerror', onPointerlockError)
   
     onDestroy(() => {
       domElement.removeEventListener('mousemove', onMouseMove)
+      domElement.removeEventListener('mousedown', onMouseDown) 
       domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange)
       domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError)
     })
@@ -76,11 +79,19 @@
       } else {
         dispatch('unlock')
         isLocked = false
+        paintMode.set(false)
       }
     }
   
     function onPointerlockError() {
       console.error('PointerLockControls: Unable to use Pointer Lock API')
+    }
+
+    function onMouseDown(event: MouseEvent) {
+      if (event.button === 0) { 
+        unlock()
+        paintMode.set(true)
+      }
     }
   </script>
   
