@@ -91,6 +91,10 @@
       if (event.button === 0) { 
         unlock()
         paintMode.set(true)
+        if ($camera) {
+          $camera.rotation.set(0, 0, 0)
+          $camera.quaternion.setFromEuler(new Euler(0, 0, 0, 'YXZ'))
+        }
       }
     }
   </script>
