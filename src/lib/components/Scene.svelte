@@ -41,11 +41,6 @@
   intensity={1}
 />
 
-<T.PointLight
-  position={[0, 10, 0]}
-  intensity={1}
-  distance={100}
-/>
 
 <T.GridHelper
   args={[50]}
@@ -61,7 +56,7 @@
 
 <CollisionGroups groups={[0]}>
   <Player
-    position={[0, 57, -25]}
+    position={[0, 75, 30]}
   />
 
 </CollisionGroups>

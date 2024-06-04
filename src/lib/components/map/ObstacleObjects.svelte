@@ -71,7 +71,7 @@
           {:else if shape === 'torus'}
             <T.TorusGeometry args={[size / 2, size / 4, 16, 100]} />
           {/if}
-          <T.MeshNormalMaterial color={color} />
+          <T.MeshStandardMaterial color={color} />
         </T.Mesh>
       </AutoColliders>
       {/each}
