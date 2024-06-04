@@ -2,10 +2,12 @@
     import type { RigidBody as RapierRigidBody } from '@dimforge/rapier3d-compat'
     import { T, useTask, useThrelte } from '@threlte/core'
     import { RigidBody, CollisionGroups, Collider } from '@threlte/rapier'
-    import { onDestroy } from 'svelte'
-    import { PerspectiveCamera, Vector3, Raycaster } from 'three'
+    import { onDestroy, onMount } from 'svelte'
+    import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store/settings'
+    import { updatePixels } from '$lib/store/wall';
+    import SplashWall from './map/SplashWall.svelte';
 
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
@@ -21,7 +23,10 @@
     let backward = 0
     let left = 0
     let right = 0
+    let isMouseDown = 0;
     let jump = false;
+
+    let dot: Mesh;
 
     const t = new Vector3()
   
@@ -37,7 +42,25 @@
 
     const raycaster = new Raycaster()
     let touchingGround = false
-  
+    
+    onMount(() => {
+      // Create a circle geometry
+      const dotGeometry = new CircleGeometry(0.01, 32); // Adjust the radius and segments as needed
+
+      // Create a material
+      const dotMaterial = new MeshBasicMaterial({ color: 0xffffff });
+
+      // Create a mesh using this geometry and material
+      dot = new Mesh(dotGeometry, dotMaterial);
+
+      // Position the dot in the center of the camera
+      dot.position.set(0, 0, -0.5);
+
+      // Add the dot to the camera
+      cam.add(dot);
+    });
+
+
     useTask(() => {
       if (!rigidBody) return
       // get direction
@@ -59,12 +82,50 @@
       position = [pos.x, pos.y, pos.z]
 
       raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0))
-        const intersects = raycaster.intersectObject(scene, true)
-        if (intersects.length > 0 && intersects[0].distance < height / 2 + 0.1) {
-          touchingGround = true
-        } else {
-          touchingGround = false
-        }
+      const intersects = raycaster.intersectObject(scene, true)
+      if (intersects.length > 0 && intersects[0].distance < height / 2 + 0.1) {
+        touchingGround = true
+      } else {
+        touchingGround = false
+      }
+
+
+      // Check for intersections with the wall
+      raycaster.setFromCamera(new Vector2(0, 0), cam);
+      const wallIntersects = raycaster.intersectObjects(scene.children, true);
+
+      const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
+      if ( intersectsWithSplashWall && dot.material instanceof MeshBasicMaterial) {
+        dot.material.color.set(0xff0000);
+
+      // Get the UV coordinates of the intersection point
+      const uv = intersectsWithSplashWall.uv;
+
+      if(isMouseDown && uv) {
+        // Convert the UV coordinates to pixel coordinates
+        const x = Math.floor(uv?.x * 4000);
+        const y = Math.floor(uv?.y * 3000);        
+        // Draw pixels in a circle with radius 10 around the intersection 
+        const updates = [];
+        for (let i = -10; i < 10; i++) {
+          for (let j = -10; j < 10; j++) {
+            if (i * i + j * j < 100) {
+              updates.push({ x: x + i, y: y + j, r: 255, g: 0, b: 0, a: 255 })       
+            }
+          }
+        }        
+        updatePixels(updates);
+      }
+      
+      } else if(dot.material instanceof MeshBasicMaterial) {
+        dot.material.color.set(0xffffff);
+      }
+      
+      if(t.y < -50) {
+        rigidBody.setTranslation(new Vector3(0, 5, 0), true)
+        rigidBody.setLinvel(new Vector3(0, -5, 0), true)
+        cam.rotation.set(0, 0, 0)
+      }
     })
 
 
@@ -131,13 +192,27 @@
           break;
       }
     }
+
+    function onMouseDown() {
+      isMouseDown = 1;
+    }
+
+    function onMouseUp() {
+      isMouseDown = 0;
+    }
+  
   </script>
   
   <svelte:window
     on:keydown|preventDefault={onKeyDown}
     on:keyup={onKeyUp}
+    on:mousedown={onMouseDown} 
+    on:mouseup={onMouseUp}
   />
   
+
+  
+
   <T.Group position.y={0.9}>
     <T.PerspectiveCamera
       makeDefault
