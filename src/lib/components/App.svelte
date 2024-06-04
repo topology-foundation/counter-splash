@@ -6,6 +6,7 @@
   import * as Dialog from "$lib/components/ui/dialog";
   import * as Select from "$lib/components/ui/select";
   import { selectedKeyboard } from '$lib/store/settings'; 
+  import Ui from './ui/paintMode/Ui.svelte';
 
   let keyboard : any
 
@@ -19,6 +20,10 @@
     selectedKeyboard.set(keyboard.value);
   }
 </script>
+
+<div class="absolute">
+  <Ui />
+</div>
 
 <div>
   <div class="absolute z-10 right-0 p-5 bg-white">
