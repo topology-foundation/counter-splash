@@ -1,3 +1,7 @@
+<!--
+  PaintPlatforms generates platforms near the wall for players to paint on
+-->
+
 <script lang="ts">
     import { T } from '@threlte/core'
     import { AutoColliders } from '@threlte/rapier'
@@ -15,7 +19,7 @@
         <AutoColliders shape={'cuboid'}>
           <T.Mesh name={`Platform${height}${position}`} position={[position, height, 0]}>
             <T.BoxGeometry args={[platformWidth, 1, platformDepth]} />
-            <T.MeshStandardMaterial color={'#808080'} />          
+            <T.MeshStandardMaterial color={'#808080'} />
           </T.Mesh>
         </AutoColliders>
       {/each}

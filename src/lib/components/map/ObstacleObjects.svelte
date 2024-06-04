@@ -1,3 +1,6 @@
+<!--
+  ObstacleObjects generates random objects to practice parkour on
+-->
 <script lang="ts">
     import { T } from "@threlte/core";
     import { AutoColliders, type AutoCollidersShapes } from "@threlte/rapier";
