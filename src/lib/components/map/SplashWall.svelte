@@ -30,7 +30,7 @@
 </script>
 
 <T.Group position={[0, 27, -50]}>
-        <AutoColliders shape={'cuboid'}>
+        <AutoColliders shape={'cuboid'} friction={0}>
         <T.Mesh name="SplashWall">
             <T.PlaneGeometry args={[100, 80]} />
             <T.MeshBasicMaterial map={texture} />

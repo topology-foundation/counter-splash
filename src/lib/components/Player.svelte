@@ -13,7 +13,7 @@
     let radius = 0.3
     let height = 1.7
     export let speed = 6
-    let jumpForce = 5;
+    let jumpForce = 10;
 
     let rigidBody: RapierRigidBody
     let lock: () => void
@@ -66,14 +66,15 @@
       // get direction
       const velVec = t.fromArray([right - left, 0, backward - forward])
       // sort rotate and multiply by speed
-      velVec.applyEuler(cam.rotation).multiplyScalar(speed)
+      velVec.applyEuler(cam.rotation).multiplyScalar(speed)  
       // don't override falling velocity
       const linVel = rigidBody.linvel()
-      t.y = linVel.y
+      t.y = linVel.y      
       if (jump && touchingGround) {
         t.y = jumpForce;
         jump = false;
       }
+
       // finally set the velocities and wake up the body
       rigidBody.setLinvel(t, true)
   
@@ -82,14 +83,17 @@
       position = [pos.x, pos.y, pos.z]
 
       raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0))
+
       const intersects = raycaster.intersectObject(scene, true)
-      if (intersects.length > 0 && intersects[0].distance < height / 2 + 0.1) {
+      
+      // Allows a player to jump even if there is a slight amount of distance between player and ground
+      // This extra distance happens whern a player is floaty and walking down a slope
+      const groundingTolerance = 0.5
+      if (intersects.length > 0 && intersects[0].distance < height / 2 + groundingTolerance) {
         touchingGround = true
       } else {
         touchingGround = false
       }
-
-
       // Check for intersections with the wall
       raycaster.setFromCamera(new Vector2(0, 0), cam);
       const wallIntersects = raycaster.intersectObjects(scene.children, true);
@@ -233,11 +237,14 @@
     <RigidBody
       bind:rigidBody
       enabledRotations={[false, false, false]}
-    >
+      gravityScale={1.5}
+    > 
       <CollisionGroups groups={[0]}>
         <Collider
           shape={'capsule'}
           args={[height / 2 - radius, radius]}
+          friction={0}
+          restitution={0}
         />
       </CollisionGroups>
   
@@ -247,6 +254,7 @@
             sensor
             shape={'ball'}
             args={[radius * 1.2]}
+            restitution={0}
           />
         </T.Group>
       </CollisionGroups>

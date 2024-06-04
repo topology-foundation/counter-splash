@@ -33,9 +33,18 @@
   files="shanghai_riverside_1k.hdr"
 />
 
+<T.AmbientLight intensity={.6} />
+
 <T.DirectionalLight
   castShadow
-  position={[8, 20, -3]}
+  position={[8, 1000, -3]}
+  intensity={1}
+/>
+
+<T.PointLight
+  position={[0, 10, 0]}
+  intensity={1}
+  distance={100}
 />
 
 <T.GridHelper
@@ -52,7 +61,7 @@
 
 <CollisionGroups groups={[0]}>
   <Player
-    position={[0, 57, 0]}
+    position={[0, 57, -25]}
   />
 
 </CollisionGroups>
