@@ -39,20 +39,19 @@
       dispatch('change')
     }
   
-    export const lock = () =>
-      domElement.requestPointerLock()
-      export const unlock = () => document.exitPointerLock()
+    export const lock = () => domElement.requestPointerLock()
+    export const unlock = () => document.exitPointerLock()
 
     domElement.addEventListener('mousemove', onMouseMove)
-    domElement.addEventListener('mousedown', onMouseDown)
     domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange)
     domElement.ownerDocument.addEventListener('pointerlockerror', onPointerlockError)
+    domElement.ownerDocument.addEventListener('keydown', onKeyDown)
   
     onDestroy(() => {
       domElement.removeEventListener('mousemove', onMouseMove)
-      domElement.removeEventListener('mousedown', onMouseDown)
       domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange)
       domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError)
+      domElement.ownerDocument.removeEventListener('keydown', onKeyDown)
     })
   
     function onMouseMove(event: MouseEvent) {
@@ -88,12 +87,15 @@
       console.error('PointerLockControls: Unable to use Pointer Lock API')
     }
 
-    function onMouseDown(event: MouseEvent) {
-      if (event.button === 0) {
-        if (!isLocked) return
-        paintMode.set(true)
-        unlock()
-        pointCameraToXAxis()
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'e') {
+        if (isLocked) {
+          unlock()
+          pointCameraToXAxis()
+          paintMode.set(true)
+        } else {
+          lock()
+        }
       }
     }
   
