@@ -33,8 +33,7 @@
   
     const lockControls = () => lock()
   
-  const { renderer, scene } = useThrelte()
-  
+    const { renderer, scene } = useThrelte()
 
     const raycaster = new Raycaster()
     let touchingGround = false
@@ -66,25 +65,39 @@
       // don't override falling velocity
       const linVel = rigidBody.linvel()
       t.y = linVel.y      
-      if (jump && touchingGround) {
-        t.y = jumpForce;
-        jump = false;
-      }
-
-      // finally set the velocities and wake up the body
-      rigidBody.setLinvel(t, true)
-  
       // when body position changes update position prop for camera
       const pos = rigidBody.translation()
       position = [pos.x, pos.y, pos.z]
 
+
+      // Turn raycaster downwards to check for ground intersections
       raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0))
 
       const intersects = raycaster.intersectObject(scene, true)
       
-      // Allows a player to jump even if there is a slight amount of distance between player and ground
+      // START Jump Logic
+      const intersectsWithJumpPad = intersects.find(intersect => intersect.object.name === "jumpPad");
+      
+      if (jump && touchingGround) {
+        t.y = jumpForce;
+        jump = false;
+      }    
+
+      // *groundingTolerance* Allows a player to jump even if there is a slight amount of distance between player and ground
       // This extra distance happens whern a player is floaty and walking down a slope
       const groundingTolerance = 0.5
+    
+      if (intersectsWithJumpPad && intersectsWithJumpPad?.distance < height / 2 + groundingTolerance) {
+        t.y = jump ? 22 :  15;
+        jump = false;        
+        console.log(intersectsWithJumpPad?.distance,  height)
+      }
+      
+      // finally set the velocities and wake up the body
+      rigidBody.setLinvel(t, true)
+      
+      // END Jump Logic
+
       if (intersects.length > 0 && intersects[0].distance < height / 2 + groundingTolerance) {
         touchingGround = true
       } else {
@@ -96,7 +109,7 @@
 
       const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
       const distance = intersectsWithSplashWall?.distance || 1000;
-      if (intersectsWithSplashWall && distance < 10 && dot.material instanceof MeshBasicMaterial) {
+      if (intersectsWithSplashWall && distance < 20 && dot.material instanceof MeshBasicMaterial) {
         dot.material.color.set(0xff0000);
         setCanPaint(true);
       // Get the UV coordinates of the intersection point
@@ -124,7 +137,7 @@
       }
       
       if(t.y < -50) {
-        rigidBody.setTranslation(new Vector3(0, 5, 0), true)
+        rigidBody.setTranslation(new Vector3(0, 35, 50), true)
         rigidBody.setLinvel(new Vector3(0, -5, 0), true)
         cam.rotation.set(0, 0, 0)
       }

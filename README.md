@@ -1,3 +1,13 @@
+## Controls
+
+This section describes the controls for interacting with the application.
+
+- **Arrow keys**: Use the arrow keys to move the player around the environment.
+- **Space bar**: Press the space bar to make the player jump. Holding the space bar on jump pads causes a higher jump.
+- **Mouse**: Use the mouse to change the camera angle.
+- **Left Click**: When close to a drawable surface, left click to paint
+- **E key**: Press the E key to toggle paint mode.
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).

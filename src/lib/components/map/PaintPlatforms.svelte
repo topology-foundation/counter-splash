@@ -16,10 +16,10 @@
   <T.Group position={[0, 0, -40]}>
     {#each platformHeights as height}
       {#each platformPositions as position}
-        <AutoColliders shape={'cuboid'}>
+        <AutoColliders shape={'cuboid'} friction={0}>
           <T.Mesh name={`Platform${height}${position}`} position={[position, height, 0]}>
             <T.BoxGeometry args={[platformWidth, 1, platformDepth]} />
-            <T.MeshStandardMaterial color={'#808080'} />
+            <T.MeshStandardMaterial />
           </T.Mesh>
         </AutoColliders>
       {/each}
