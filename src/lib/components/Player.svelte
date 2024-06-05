@@ -5,7 +5,8 @@
     import { onMount } from 'svelte'
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
-    import { selectedKeyboard, paintMode } from '$lib/store/settings'
+    import { selectedKeyboard } from '$lib/store/settings'
+    import { paintMode } from '$lib/store/player'
     import { updatePixels } from '$lib/store/wall';
     import SplashWall from './map/SplashWall.svelte';
 
