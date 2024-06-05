@@ -7,7 +7,7 @@
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store/settings'
     import { updatePixels } from '$lib/store/wall';
-    import SplashWall from './map/SplashWall.svelte';
+    import { setCanPaint } from '$lib/store/player';
 
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
@@ -102,7 +102,7 @@
       const distance = intersectsWithSplashWall?.distance || 1000;
       if (intersectsWithSplashWall && distance < 10 && dot.material instanceof MeshBasicMaterial) {
         dot.material.color.set(0xff0000);
-
+        setCanPaint(true);
       // Get the UV coordinates of the intersection point
       const uv = intersectsWithSplashWall.uv;      
       if(isMouseDown && uv) {
@@ -121,8 +121,10 @@
         updatePixels(updates);
       }
       
+      
       } else if(dot.material instanceof MeshBasicMaterial) {
         dot.material.color.set(0xffffff);
+        setCanPaint(false);
       }
       
       if(t.y < -50) {
@@ -130,8 +132,10 @@
         rigidBody.setLinvel(new Vector3(0, -5, 0), true)
         cam.rotation.set(0, 0, 0)
       }
+
     })
 
+    
 
     const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; jump: string }; azerty?: { forward: string; backward: string; left: string; right: string; jump: string }; } = {
       qwerty: {
