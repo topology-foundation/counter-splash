@@ -7,7 +7,8 @@
   import Player from './Player.svelte'
   import Ground from './map/Ground.svelte'
   import SplashWall from './map/SplashWall.svelte';
-
+  import PaintPlatforms from './map/PaintPlatforms.svelte'
+    import ObstacleObjects from './map/ObstacleObjects.svelte';
   let playerMesh: Mesh
   let positionHasBeenSet = false
   const smoothPlayerPosX = spring(0)
@@ -32,10 +33,14 @@
   files="shanghai_riverside_1k.hdr"
 />
 
+<T.AmbientLight intensity={.6} />
+
 <T.DirectionalLight
   castShadow
-  position={[8, 20, -3]}
+  position={[8, 1000, -3]}
+  intensity={1}
 />
+
 
 <T.GridHelper
   args={[50]}
@@ -44,12 +49,14 @@
 
 <CollisionGroups groups={[0, 15]}>
   <SplashWall />
+  <PaintPlatforms />
+  <ObstacleObjects />
   <Ground />
 </CollisionGroups>
 
 <CollisionGroups groups={[0]}>
   <Player
-    position={[0, 2, 3]}
+    position={[0, 75, 30]}
   />
 
 </CollisionGroups>
