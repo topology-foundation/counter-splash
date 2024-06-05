@@ -9,12 +9,14 @@
     import { paintMode } from '$lib/store/player'
     import { updatePixels } from '$lib/store/wall';
     import { setCanPaint } from '$lib/store/player';
+    import { tweened } from 'svelte/motion';
+    import { cubicOut } from 'svelte/easing';
 
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
     let height = 1.7
     export let speed = 6
-    let jumpForce = 10;
+    let jumpForce = 20;
 
     let rigidBody: RapierRigidBody
     let lock: () => void
@@ -38,7 +40,16 @@
 
     const raycaster = new Raycaster()
     let touchingGround = false
-    
+
+    const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
+
+    $: zoomLevel.subscribe(value => {
+        if (cam) {
+            cam.zoom = value;
+            cam.updateProjectionMatrix();
+        }
+    });
+
     onMount(() => {
       // Create a circle geometry
       const dotGeometry = new CircleGeometry(0.01, 32); // Adjust the radius and segments as needed
@@ -205,7 +216,18 @@
     function onMouseUp() {
       isMouseDown = 0;
     }
-  
+
+    // Paint mode handler
+    $: {
+        if ($paintMode && cam) {
+            let coord = cam.position;
+            const distanceFromWall = Math.abs(coord.z + 50);
+            zoomLevel.set(distanceFromWall / 10);
+        } else if (!$paintMode && cam) {
+            zoomLevel.set(1);
+        }
+    }
+
   </script>
   
   <svelte:window
