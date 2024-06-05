@@ -2,7 +2,7 @@
     import { createEventDispatcher, onDestroy } from 'svelte'
     import { Euler, Camera, Quaternion } from 'three'
     import { useThrelte, useParent } from '@threlte/core'
-    import { paintMode } from '$lib/store/player'
+    import { paintMode, canPaint } from '$lib/store/player'
     import TWEEN, { Tween, Easing } from '@tweenjs/tween.js'
   
     // Set to constrain the pitch of the camera
@@ -92,7 +92,9 @@
         if (isLocked) {
           unlock()
           pointCameraToXAxis()
-          paintMode.set(true)
+          if ($canPaint) {
+            paintMode.set(true)
+          }
         } else {
           lock()
         }
