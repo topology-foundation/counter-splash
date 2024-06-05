@@ -91,9 +91,9 @@
       if (event.key === 'e') {
         if (isLocked) {
           unlock()
-          pointCameraToXAxis()
           if ($canPaint) {
             paintMode.set(true)
+            pointCameraToXAxis()
           }
         } else {
           lock()
