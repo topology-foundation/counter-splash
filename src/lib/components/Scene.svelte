@@ -9,7 +9,7 @@
   import SplashWall from './map/SplashWall.svelte';
   import PaintPlatforms from './map/PaintPlatforms.svelte'
     import ObstacleObjects from './map/ObstacleObjects.svelte';
-    import SpawnPlatform from './map/SpawnPlatform.svelte';
+    import GenericPlaform from './map/GenericPlatform.svelte';
     import ObstaclePlatforms from './map/ObstaclePlatforms.svelte';
   let playerMesh: Mesh
   let positionHasBeenSet = false
@@ -46,7 +46,7 @@
 <CollisionGroups groups={[0, 15]}>
   <SplashWall />
   <PaintPlatforms />
-  <SpawnPlatform />
+  <GenericPlaform position={[0, 30, 50]} />
   <!--<ObstacleObjects containerHeight={100} containerWidth={100} containerLength={100} minSize={1} maxSize={9} />-->
   <!-- Level 3 : Sparse and small objects, various heights, upper stratosphere -->
   <ObstacleObjects seed={789} center={[0, 50, 30]} containerHeight={10} containerWidth={120} containerLength={110} minSize={2} maxSize={5} numShapes={100} />
