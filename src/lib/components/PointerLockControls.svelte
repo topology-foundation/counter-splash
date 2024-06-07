@@ -88,6 +88,7 @@
     }
 
     function onKeyDown(event: KeyboardEvent) {
+      event.preventDefault()
       if (event.key === 'e') {
         if (isLocked) {
           unlock()

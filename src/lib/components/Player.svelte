@@ -152,9 +152,10 @@
     }
   
     function onKeyDown(e: KeyboardEvent) {
+      e.preventDefault();
       if ($paintMode) return;
       const mapping = keyMapping[$selectedKeyboard];
-      switch (e.key) {
+      switch (e.key.toLowerCase()) {
         case mapping.backward:
           backward = 1;
           break;
@@ -176,8 +177,9 @@
     }
   
     function onKeyUp(e: KeyboardEvent) {
-      const mapping = keyMapping[$selectedKeyboard]; 
-      switch (e.key) {
+      e.preventDefault();
+      const mapping = keyMapping[$selectedKeyboard];
+      switch (e.key.toLowerCase()) {
         case mapping.backward:
           backward = 0;
           break;
