@@ -1,12 +1,14 @@
 <script lang="ts">
     import { T } from '@threlte/core'
     import { pixels } from '$lib/store/wall'
+    import { mousePosition } from '$lib/store/player';
     import { onMount } from 'svelte';
     import { AutoColliders } from '@threlte/rapier'
     import * as THREE from 'three';
     import { get } from 'svelte/store';
     import { generateRandomPixels, initPixelToImage } from '$lib/handler';
-
+    import { interactivity } from '@threlte/extras'
+    interactivity()
 
     let texture : any;
     const data = get(pixels);
@@ -14,6 +16,18 @@
 
     const width = 4000;
     const height = 3000;
+
+    interface ExtendedPointerEvent extends PointerEvent {
+        point: {
+            x: number
+            y: number
+            z: number
+        }
+    }
+
+    function handlePointerMove (event: ExtendedPointerEvent): void {
+        mousePosition.set(event.point)
+    }
 
     onMount(() => {
         texture = new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
@@ -29,7 +43,8 @@
     });
 </script>
 
-<T.Group position={[0, 27, -50]}>
+<T.Group position={[0, 27, -50]}   on:pointermove={handlePointerMove}
+>
         <AutoColliders shape={'cuboid'} friction={0}>
         <T.Mesh name="SplashWall">
             <T.PlaneGeometry args={[100, 80]} />
