@@ -9,6 +9,7 @@ export interface Coords {
 }
 
 export const mousePosition = writable<Coords>({ x: 0, y: 0, z: 0 });
+export const isMouseDown = writable<boolean>(false);
 
 export const canPaint = writable(false);
 export function setCanPaint(value: boolean) {
