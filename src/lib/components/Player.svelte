@@ -165,24 +165,28 @@
     }
   
     function onKeyDown(e: KeyboardEvent) {
-      e.preventDefault();
-      if ($paintMode) return;
       const mapping = keyMapping[$selectedKeyboard];
-      switch (e.key.toLowerCase()) {
+      switch (e.key) {
         case mapping.backward:
+        case 'ArrowDown':
           backward = 1;
           break;
         case mapping.forward:
+        case 'ArrowUp':
           forward = 1;
           break;
         case mapping.left:
+        case 'ArrowLeft':
           left = 1;
           break;
         case mapping.right:
+        case 'ArrowRight':
           right = 1;
           break;
         case mapping.jump:
-          jump = true;
+          if (e.key === mapping.jump || e.key === ' ') {
+            jump = true;
+          }
           break;
         default:
           break;
@@ -190,23 +194,28 @@
     }
   
     function onKeyUp(e: KeyboardEvent) {
-      e.preventDefault();
       const mapping = keyMapping[$selectedKeyboard];
-      switch (e.key.toLowerCase()) {
+      switch (e.key) {
         case mapping.backward:
+        case 'ArrowDown':
           backward = 0;
           break;
         case mapping.forward:
+        case 'ArrowUp':
           forward = 0;
           break;
         case mapping.left:
+        case 'ArrowLeft':
           left = 0;
           break;
         case mapping.right:
+        case 'ArrowRight':
           right = 0;
           break;
         case mapping.jump:
-          jump = false;
+          if (e.key === mapping.jump || e.key === ' ') {
+            jump = false;
+          }
           break;
         default:
           break;
