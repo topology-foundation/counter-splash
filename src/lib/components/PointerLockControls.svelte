@@ -82,13 +82,9 @@
     }
     function onPointerlockChange() {
       if (document.pointerLockElement === domElement) {
-        console.log('PointerLockControls: Locked')
-        dispatch('lock')
         paintMode.set(false)
         isLocked = true
       } else {
-        console.log('PointerLockControls: Unloack')
-        dispatch('unlock')
         isLocked = false
       }
     }
