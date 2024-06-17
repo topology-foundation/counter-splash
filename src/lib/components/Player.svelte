@@ -6,9 +6,11 @@
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store/settings'
-    import { paintMode } from '$lib/store/player'
+    import { paintMode, isMouseDown, mousePosition } from '$lib/store/player'
     import { updatePixels } from '$lib/store/wall';
     import { setCanPaint } from '$lib/store/player';
+    import { tweened } from 'svelte/motion';
+    import { cubicOut } from 'svelte/easing';
 
     export let position: [x: number, y: number, z: number] = [0, 0, 0]
     let radius = 0.3
@@ -24,7 +26,6 @@
     let backward = 0
     let left = 0
     let right = 0
-    let isMouseDown = 0;
     let jump = false;
 
     let dot: Mesh;
@@ -37,7 +38,16 @@
 
     const raycaster = new Raycaster()
     let touchingGround = false
-    
+
+    const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
+
+    $: zoomLevel.subscribe(value => {
+        if (cam) {
+            cam.zoom = value;
+            cam.updateProjectionMatrix();
+        }
+    });
+
     onMount(() => {
       // Create a circle geometry
       const dotGeometry = new CircleGeometry(0.01, 32); // Adjust the radius and segments as needed
@@ -103,39 +113,7 @@
       } else {
         touchingGround = false
       }
-      // Check for intersections with the wall
-      raycaster.setFromCamera(new Vector2(0, 0), cam);
-      const wallIntersects = raycaster.intersectObjects(scene.children, true);
 
-      const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
-      const distance = intersectsWithSplashWall?.distance || 1000;
-      if (intersectsWithSplashWall && distance < 20 && dot.material instanceof MeshBasicMaterial) {
-        dot.material.color.set(0xff0000);
-        setCanPaint(true);
-      // Get the UV coordinates of the intersection point
-      const uv = intersectsWithSplashWall.uv;      
-      if(isMouseDown && uv) {
-        // Convert the UV coordinates to pixel coordinates
-        const x = Math.floor(uv?.x * 4000);
-        const y = Math.floor(uv?.y * 3000);        
-        // Draw pixels in a circle with radius 10 around the intersection 
-        const updates = [];
-        for (let i = -10; i < 10; i++) {
-          for (let j = -10; j < 10; j++) {
-            if (i * i + j * j < 100) {
-              updates.push({ x: x + i, y: y + j, r: 255, g: 0, b: 0, a: 255 })       
-            }
-          }
-        }        
-        updatePixels(updates);
-      }
-      
-      
-      } else if(dot.material instanceof MeshBasicMaterial) {
-        dot.material.color.set(0xffffff);
-        setCanPaint(false);
-      }
-      
       if(t.y < -50) {
         rigidBody.setTranslation(new Vector3(0, 35, 50), true)
         rigidBody.setLinvel(new Vector3(0, -5, 0), true)
@@ -222,21 +200,40 @@
       }
     }
 
-    function onMouseDown() {
-      isMouseDown = 1;
+    // Paint mode handler
+    $: {
+        if ($paintMode && cam) {
+            let coord = cam.position;
+            const distanceFromWall = Math.abs(coord.z + 50);
+            zoomLevel.set(distanceFromWall / 10);
+        } else if (!$paintMode && cam) {
+            zoomLevel.set(1);
+        }
     }
 
-    function onMouseUp() {
-      isMouseDown = 0;
+    $: if ($isMouseDown && $paintMode) {
+      console.log("paint")
+        // Convert the UV coordinates to pixel coordinates
+        const x = Math.floor($mousePosition.x * 4000);
+        const y = Math.floor($mousePosition.y * 3000);        
+        // Draw pixels in a circle with radius 10 around the intersection 
+        const updates = [];
+        for (let i = -10; i < 10; i++) {
+          for (let j = -10; j < 10; j++) {
+            if (i * i + j * j < 100) {
+              updates.push({ x: x + i, y: y + j, r: 255, g: 0, b: 0, a: 255 })       
+            }
+          }
+        }        
+        updatePixels(updates);
     }
-  
+      
+
   </script>
   
   <svelte:window
     on:keydown|preventDefault={onKeyDown}
     on:keyup={onKeyUp}
-    on:mousedown={onMouseDown} 
-    on:mouseup={onMouseUp}
   />
   
 
