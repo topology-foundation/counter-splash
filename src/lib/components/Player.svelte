@@ -114,6 +114,12 @@
         touchingGround = false
       }
 
+      if(t.y < -50) {
+        rigidBody.setTranslation(new Vector3(0, 35, 50), true)
+        rigidBody.setLinvel(new Vector3(0, -5, 0), true)
+        cam.rotation.set(0, 0, 0)
+      }
+
     })
 
     
