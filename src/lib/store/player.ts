@@ -5,10 +5,9 @@ export const paintMode = writable<boolean>(false);
 export interface Coords {
   x: number;
   y: number;
-  z: number;
 }
 
-export const mousePosition = writable<Coords>({ x: 0, y: 0, z: 0 });
+export const mousePosition = writable<Coords>({ x: 0, y: 0 });
 export const isMouseDown = writable<boolean>(false);
 
 export const canPaint = writable(false);

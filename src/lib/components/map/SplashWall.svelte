@@ -18,15 +18,14 @@
     const height = 3000;
 
     interface ExtendedPointerEvent extends PointerEvent {
-        point: {
+        uv: {
             x: number
             y: number
-            z: number
         }
     }
 
     function handlePointerMove (event: ExtendedPointerEvent): void {
-        mousePosition.set(event.point)
+        mousePosition.set(event.uv)
     }
 
     function handlePointerDown (): void {
