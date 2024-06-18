@@ -6,7 +6,7 @@
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store/settings'
-    import { paintMode, isMouseDown, mousePosition } from '$lib/store/player'
+    import { paintMode, isMouseDown, mousePosition, isIntersect } from '$lib/store/player'
     import { updatePixels } from '$lib/store/wall';
     import { setCanPaint } from '$lib/store/player';
     import { tweened } from 'svelte/motion';
@@ -211,8 +211,7 @@
         }
     }
 
-    $: if ($isMouseDown && $paintMode) {
-      console.log("paint")
+    $: if ($isMouseDown && $paintMode && !$isIntersect) {
         // Convert the UV coordinates to pixel coordinates
         const x = Math.floor($mousePosition.x * 4000);
         const y = Math.floor($mousePosition.y * 3000);        
