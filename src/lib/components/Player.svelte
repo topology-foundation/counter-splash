@@ -6,7 +6,8 @@
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store/settings'
-    import { paintMode, isMouseDown, mousePosition, isIntersect } from '$lib/store/player'
+    import { paintMode, isMouseDown, mousePosition, isIntersect, color } from '$lib/store/player'
+    import { get } from 'svelte/store'
     import { updatePixels } from '$lib/store/wall';
     import { setCanPaint } from '$lib/store/player';
     import { tweened } from 'svelte/motion';
@@ -252,10 +253,11 @@
         updatePixels(updates);
     }
     function drawCircle(updates: { x: number; y: number; r: number; g: number; b: number; a: number }[], x: number, y: number): void {
+        const { r, g, b, a } = get(color);
         for (let i = -10; i < 10; i++) {
             for (let j = -10; j < 10; j++) {
                 if (i * i + j * j < 100) {
-                    updates.push({ x: x + i, y: y + j, r: 255, g: 0, b: 0, a: 255 });
+                    updates.push({ x: x + i, y: y + j, r, g, b, a });
                 }
             }
         }
