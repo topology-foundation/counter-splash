@@ -7,6 +7,7 @@
   import * as Select from "$lib/components/ui/select";
   import { selectedKeyboard } from '$lib/store/settings'; 
   import Ui from './ui/paintMode/Ui.svelte';
+  import { PerfMonitor } from '@threlte/extras';
 
   let keyboard : any
 
@@ -58,6 +59,7 @@
 
 <div class="relative h-full w-full">
   <Canvas>
+    <PerfMonitor anchorX={'left'} logsPerSecond={30}/>
     <World>
       <Scene />
     </World>

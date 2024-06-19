@@ -236,7 +236,7 @@
         const sy = (y0 < y1) ? 1 : -1;
         let err = dx - dy;
 
-        while (true) {
+        while (true) {            
             drawCircle(updates, x0, y0);
 
             if (x0 === x1 && y0 === y1) break;
@@ -249,7 +249,7 @@
                 err += dx;
                 y0 += sy;
             }
-        }
+        }        
         updatePixels(updates);
     }
     function drawCircle(updates: { x: number; y: number; r: number; g: number; b: number; a: number }[], x: number, y: number): void {
