@@ -1,17 +1,20 @@
 <script lang="ts">
     import { paintMode, palette, selectedColor } from "$lib/store/player";
-    import type { Color } from "$lib/store/player";
+    import type { Color } from "$lib/store/player"
     import { fly } from "svelte/transition";
     import { get } from 'svelte/store';
 
-    let colors = get(palette);
+    let colors: Color[] = get(palette);
+    let selected: Color = get(selectedColor);
 
     function selectColor(color: Color): void {
         selectedColor.set(color);
+        selected = color;  // Update the local selected color
     }
 
-    // Update colors when palette store changes
+    // Update colors and selected color when stores change
     $: colors = $palette;
+    $: selected = $selectedColor;
 </script>
 
 {#if $paintMode}
@@ -21,7 +24,7 @@
                 <button 
                     type="button" 
                     class="relative w-full pb-full rounded-lg focus:outline-none" 
-                    style="background-color: rgba({color.r}, {color.g}, {color.b}, {color.a / 255});" 
+                    style="background-color: rgba({color.r}, {color.g}, {color.b}, {color.a / 255}); border: 3px solid {selected.r === color.r && selected.g === color.g && selected.b === color.b && selected.a === color.a ? 'black' : 'transparent'};" 
                     on:click={() => selectColor(color)}
                     on:keydown={(e) => e.key === 'Enter' && selectColor(color)}
                     aria-label="Select color">
