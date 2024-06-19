@@ -262,7 +262,7 @@
             }
         }
     }
-    $: if (!$isMouseDown) {
+    $: if (!$isMouseDown || $isIntersect) {
         lastMousePosition = null;
     }
       
