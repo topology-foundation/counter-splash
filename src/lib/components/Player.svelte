@@ -6,10 +6,10 @@
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
     import { selectedKeyboard } from '$lib/store/settings'
-    import { paintMode, isMouseDown, mousePosition, isIntersect, selectedColor } from '$lib/store/player'
+    import { paintMode, isMouseDown, mousePosition, isIntersect, selectedColor, debugMode } from '$lib/store/player'
     import { get } from 'svelte/store'
     import { updatePixels } from '$lib/store/wall';
-    import { setCanPaint } from '$lib/store/player';
+    import { setPlayerPosition, setDebugMode } from '$lib/store/player';
     import { tweened } from 'svelte/motion';
     import { cubicOut } from 'svelte/easing';
 
@@ -101,7 +101,6 @@
       if (intersectsWithJumpPad && intersectsWithJumpPad?.distance < height / 2 + groundingTolerance) {
         t.y = jump ? 22 :  15;
         jump = false;        
-        console.log(intersectsWithJumpPad?.distance,  height)
       }
       
       // finally set the velocities and wake up the body
@@ -116,29 +115,41 @@
       }
 
       if(t.y < -50) {
-        rigidBody.setTranslation(new Vector3(0, 35, 50), true)
+        rigidBody.setTranslation(new Vector3(0, -3, 25), true)
         rigidBody.setLinvel(new Vector3(0, -5, 0), true)
         cam.rotation.set(0, 0, 0)
       }
+      
+      setPlayerPosition([pos.x, pos.y, pos.z])
 
+      console.log($debugMode)
     })
 
     
-
-    const keyMapping: { [x: string]: any; qwerty?: { forward: string; backward: string; left: string; right: string; jump: string }; azerty?: { forward: string; backward: string; left: string; right: string; jump: string }; } = {
+    interface KeyMapping {
+      forward: string;
+      backward: string;
+      left: string;
+      right: string;
+      jump: string;
+      debug: string;
+    }
+    const keyMapping: { [x: string]: any; qwerty?: KeyMapping; azerty?: KeyMapping; } = {
       qwerty: {
         forward: 'w',
         backward: 's',
         left: 'a',
         right: 'd',
-        jump: ' '
+        jump: ' ',
+        debug: 'i'
       },
       azerty: {
         forward: 'z',
         backward: 's',
         left: 'q',
         right: 'd',
-        jump: ' '
+        jump: ' ',
+        debug: 'i'
       },
       // Add other keyboard layouts here
     }
@@ -167,6 +178,9 @@
             jump = true;
           }
           break;
+        case mapping.debug:
+          setDebugMode(!$debugMode);
+          break;
         default:
           break;
       }
@@ -174,6 +188,7 @@
   
     function onKeyUp(e: KeyboardEvent) {
       const mapping = keyMapping[$selectedKeyboard];
+      
       switch (e.key) {
         case mapping.backward:
         case 'ArrowDown':
@@ -274,17 +289,15 @@
     on:keyup={onKeyUp}
   />
   
-
-  
-
   <T.Group position.y={0.9}>
     <T.PerspectiveCamera
       makeDefault
       fov={90}
-      bind:ref={cam}
+      bind:ref={cam}      
       position.x={position[0]}
       position.y={position[1]}
       position.z={position[2]}
+
       on:create={({ ref }) => {
         ref.lookAt(new Vector3(0, 2, 0))
       }}

@@ -1,5 +1,5 @@
 <script>
-    import SemiTransparentWall from './GlassWall.svelte';
+    import SemiTransparentWall from '../GlassWall.svelte';
     // Define the positions of the walls
 
     //Generally spacing in units of 5
@@ -22,8 +22,9 @@
       { position: [15, -5, 35], rotation: [0, Math.PI / 2, 0], width: 10 },
 
       { position: [60, -5, 30], rotation: [0, Math.PI / 2, 0], width: 90 },
-      { position: [0, -5, 80], rotation: [0, 0, 0], width: 90 },
-    ];
+      { position: [-50, -5, 30], rotation: [0, Math.PI / 2, 0], width: 110 },
+      { position: [0, -5, 80], rotation: [0, 0, 0], width: 100 },
+    ]
 </script>
 
 

@@ -12,9 +12,10 @@
 
   import { isIntersect } from '$lib/store/player'
   import { interactivity } from '@threlte/extras'
-  import Level1Walls from './map/Level1Walls.svelte';
+  import Level1Walls from './map/Level1/Level1Walls.svelte';
   import JumpPad from './map/JumpPad.svelte';
-  
+  import Level1 from './map/Level1/Level1.svelte';
+
   interactivity()
 
   let playerMesh: Mesh
@@ -65,27 +66,23 @@
       on:pointerover={onHover}
       on:pointerout={offHover}
     >
-      <Level1Walls />
-      <JumpPad position={[0, -5, 30]} />
       
+      <JumpPad position={[0, -7, 33]} />      
       <GenericPlaform position={[0, -7, 25]} />
-      <!--<ObstacleObjects containerHeight={100} containerWidth={100} containerLength={100} minSize={1} maxSize={9} />-->
-      <!-- Level 3 : Sparse and small objects, various heights, upper stratosphere -->
-      <!-- <ObstacleObjects seed={789} center={[0, 50, 30]} containerHeight={10} containerWidth={120} containerLength={110} minSize={2} maxSize={5} numShapes={100} /> -->
-      <!-- Level 2 : Less objects, various heights, dark forest -->
-      <!-- <ObstacleObjects seed={567} center={[0, 30, 20]} containerHeight={10} containerWidth={100} containerLength={100} minSize={3} maxSize={7} numShapes={100} /> -->
-      <!-- Level 1 : Plenty of large objects and pads -->
-      <ObstacleObjects center={[0, 10, 20]} containerHeight={10} containerWidth={100} containerLength={100} minSize={3} maxSize={7} numShapes={150} />
       <!-- Lowest level, easy platforms-->
-      <ObstaclePlatforms />
+      <Level1 />
       <!-- Elevator, a section towards the back that enables vertical movement between the various levels more easily-->
-      <!--<ObstacleObjects seed={3221} center={[0, 40, 70]} containerHeight={60} containerWidth={80} containerLength={40} minSize={5} maxSize={7} numShapes={100} />-->
+      <ObstacleObjects seed={3221} center={[0, 35, 80]} containerHeight={50} containerWidth={80} containerLength={40} minSize={5} maxSize={7} numShapes={100} />
+      <ObstacleObjects seed={3221} center={[0, 10, 53]} containerHeight={15} containerWidth={20} containerLength={40} minSize={5} maxSize={7} numShapes={12} />
+      <ObstacleObjects seed={3231} center={[-80, 35, 40]} containerHeight={70} containerWidth={60} containerLength={100} minSize={5} maxSize={7} numShapes={100} />
+      <ObstacleObjects seed={3241} center={[80, 35, 40]} containerHeight={70} containerWidth={60} containerLength={100} minSize={5} maxSize={7} numShapes={100} />
     </T.Group>
 </CollisionGroups>
 
+<!--55 is top-->
 <CollisionGroups groups={[0]}>
   <Player
-    position={[0, -2, 25]}
+    position={[0, -3, 25]}
   />
 
 </CollisionGroups>
