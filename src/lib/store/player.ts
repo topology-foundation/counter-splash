@@ -2,9 +2,20 @@ import { writable } from "svelte/store";
 
 export const paintMode = writable<boolean>(false);
 
+export const debugMode = writable<boolean>(false);
+export const setDebugMode = (value: boolean) => {
+  debugMode.set(value);
+}
+
 export interface Coords {
   x: number;
   y: number;
+}
+
+export type Position = number[]
+export const playerPosition = writable<Position>([0, 10000 ,20005]);
+export const setPlayerPosition = (position: Position) => {
+  playerPosition.set(position);
 }
 
 export const mousePosition = writable<Coords>({ x: 0, y: 0 });

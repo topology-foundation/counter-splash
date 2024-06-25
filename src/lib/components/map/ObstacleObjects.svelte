@@ -4,6 +4,7 @@
 <script lang="ts">
     import { T } from "@threlte/core";
     import { AutoColliders, type AutoCollidersShapes } from "@threlte/rapier";
+    import JumpPad from "./JumpPad.svelte";
 
     export let center = [0, 50, 20];
     export let containerHeight = 100;
@@ -85,16 +86,7 @@
 
 {#each randomShapes as { shape, size, position, color, rotation }}
   {#if shape === 'jumpPad'}
-  <AutoColliders shape={meshShape[shape]} friction={0}>
-    <T.Mesh position={position}>
-      <T.BoxGeometry args={[4, .2, 4]} />
-      <T.MeshStandardMaterial color="#808080" />
-    </T.Mesh>
-    <T.Mesh name={'jumpPad'} position={[position[0], position[1] + .1, position[2]]}>
-      <T.BoxGeometry args={[4 * 0.9, .3, 4 * 0.9]} />
-      <T.MeshStandardMaterial color="#A9A9A9" />
-    </T.Mesh>
-  </AutoColliders>
+  <JumpPad position={position} />
   {:else}
     <AutoColliders shape={meshShape[shape]} friction={0} restitution={0}>
       <T.Mesh position={position} rotation={rotation} name={shape}>
