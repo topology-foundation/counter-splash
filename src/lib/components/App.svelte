@@ -2,12 +2,14 @@
     import { onMount } from "svelte";
     import { Canvas } from "@threlte/core";
     import { World } from "@threlte/rapier";
-    import { TopologyNode } from "@topology-foundation/node";
     import Scene from "./Scene.svelte";
     import * as Dialog from "$lib/components/ui/dialog";
     import * as Select from "$lib/components/ui/select";
     import { selectedKeyboard } from "$lib/store/settings";
     import Ui from "./ui/paintMode/Ui.svelte";
+    import { PerfMonitor } from "@threlte/extras";
+    import Position from "./ui/position/position.svelte";
+    import { debugMode } from "$lib/store/player";
 
     let keyboard: any;
 
@@ -63,11 +65,17 @@
                 </Dialog.Header>
             </Dialog.Content>
         </Dialog.Root>
+        {#if $debugMode}
+            <Position />
+        {/if}
     </div>
 </div>
 
 <div class="relative h-full w-full">
     <Canvas>
+        {#if $debugMode}
+            <PerfMonitor anchorX={"left"} logsPerSecond={30} />
+        {/if}
         <World>
             <Scene />
         </World>

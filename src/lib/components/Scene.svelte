@@ -1,19 +1,21 @@
 <script lang="ts">
   import { T, useTask } from '@threlte/core'
   import { Environment } from '@threlte/extras'
-  import { AutoColliders, CollisionGroups } from '@threlte/rapier'
+  import { CollisionGroups } from '@threlte/rapier'
   import { spring } from 'svelte/motion'
-  import { BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from 'three'
+  import { Mesh, Vector3 } from 'three'
   import Player from './Player.svelte'
-  import Ground from './map/Ground.svelte'
   import SplashWall from './map/SplashWall.svelte';
-  import PaintPlatforms from './map/PaintPlatforms.svelte'
   import ObstacleObjects from './map/ObstacleObjects.svelte';
   import GenericPlaform from './map/GenericPlatform.svelte';
   import ObstaclePlatforms from './map/ObstaclePlatforms.svelte';
 
   import { isIntersect } from '$lib/store/player'
   import { interactivity } from '@threlte/extras'
+  import Level1Walls from './map/Level1/Level1Walls.svelte';
+  import JumpPad from './map/JumpPad.svelte';
+  import Level1 from './map/Level1/Level1.svelte';
+
   interactivity()
 
   let playerMesh: Mesh
@@ -64,25 +66,23 @@
       on:pointerover={onHover}
       on:pointerout={offHover}
     >
-      <PaintPlatforms />
-      <GenericPlaform position={[0, 30, 50]} />
-      <!--<ObstacleObjects containerHeight={100} containerWidth={100} containerLength={100} minSize={1} maxSize={9} />-->
-      <!-- Level 3 : Sparse and small objects, various heights, upper stratosphere -->
-      <ObstacleObjects seed={789} center={[0, 50, 30]} containerHeight={10} containerWidth={120} containerLength={110} minSize={2} maxSize={5} numShapes={100} />
-      <!-- Level 2 : Less objects, various heights, dark forest -->
-      <ObstacleObjects seed={567} center={[0, 30, 20]} containerHeight={10} containerWidth={100} containerLength={100} minSize={3} maxSize={7} numShapes={100} />
-      <!-- Level 1 : Plenty of large objects and pads -->
-      <ObstacleObjects center={[0, 10, 20]} containerHeight={10} containerWidth={100} containerLength={100} minSize={3} maxSize={7} numShapes={150} />
+      
+      <JumpPad position={[0, -7, 33]} />      
+      <GenericPlaform position={[0, -7, 25]} />
       <!-- Lowest level, easy platforms-->
-      <ObstaclePlatforms />
+      <Level1 />
       <!-- Elevator, a section towards the back that enables vertical movement between the various levels more easily-->
-      <ObstacleObjects seed={3221} center={[0, 40, 70]} containerHeight={60} containerWidth={80} containerLength={40} minSize={5} maxSize={7} numShapes={100} />
+      <ObstacleObjects seed={3221} center={[0, 35, 80]} containerHeight={50} containerWidth={80} containerLength={40} minSize={5} maxSize={7} numShapes={100} />
+      <ObstacleObjects seed={3221} center={[0, 10, 53]} containerHeight={15} containerWidth={20} containerLength={40} minSize={5} maxSize={7} numShapes={12} />
+      <ObstacleObjects seed={3231} center={[-80, 35, 40]} containerHeight={70} containerWidth={60} containerLength={100} minSize={5} maxSize={7} numShapes={100} />
+      <ObstacleObjects seed={3241} center={[80, 35, 40]} containerHeight={70} containerWidth={60} containerLength={100} minSize={5} maxSize={7} numShapes={100} />
     </T.Group>
 </CollisionGroups>
 
+<!--55 is top-->
 <CollisionGroups groups={[0]}>
   <Player
-    position={[0, 35, 50]}
+    position={[0, -3, 25]}
   />
 
 </CollisionGroups>
