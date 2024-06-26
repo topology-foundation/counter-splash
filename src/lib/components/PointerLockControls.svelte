@@ -46,12 +46,14 @@
     domElement.ownerDocument.addEventListener('pointerlockchange', onPointerlockChange)
     domElement.ownerDocument.addEventListener('pointerlockerror', onPointerlockError)
     domElement.ownerDocument.addEventListener('keydown', onKeyDown)
+    domElement.ownerDocument.addEventListener('mousedown', onMouseDown)
   
     onDestroy(() => {
       domElement.removeEventListener('mousemove', onMouseMove)
       domElement.ownerDocument.removeEventListener('pointerlockchange', onPointerlockChange)
       domElement.ownerDocument.removeEventListener('pointerlockerror', onPointerlockError)
       domElement.ownerDocument.removeEventListener('keydown', onKeyDown)
+      domElement.ownerDocument.removeEventListener('mousedown', onMouseDown)
     })
   
     function onMouseMove(event: MouseEvent) {
@@ -71,14 +73,18 @@
   
       onChange()
     }
-  
+    
+    function onMouseDown(){
+      if(!isLocked && !$paintMode) {
+        lock()
+      
+      }
+    }
     function onPointerlockChange() {
       if (document.pointerLockElement === domElement) {
-        dispatch('lock')
         paintMode.set(false)
         isLocked = true
       } else {
-        dispatch('unlock')
         isLocked = false
       }
     }
