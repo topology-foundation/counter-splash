@@ -16,7 +16,7 @@ export async function topologyInit() {
   let canvas = getObject(node, OBJECT_ID);
   while (canvas === null) {
     console.log("waiting for canvas");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     canvas = getObject(node, OBJECT_ID);
   }
   // can add extra logic here
