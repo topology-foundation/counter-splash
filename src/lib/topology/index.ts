@@ -8,10 +8,17 @@ import { handleCanvasMessages, handlePresenceMessages } from "./handlers";
 export const OBJECT_ID = "topology::counter_splash";
 
 export async function topologyInit() {
+  // maybe add it to browser storage and
+  // add the presence handler before going
+  // through the canvas loop
   const node = new TopologyNode();
   await node.start();
-
   await node.subscribeObject(OBJECT_ID);
+
+  // also add it to the handlers file
+  node.addCustomMessageHandler("/counter-splash/presence/0.0.1", (e) =>
+    handlePresenceMessages(e),
+  );
 
   let canvas = getObject(node, OBJECT_ID);
   while (canvas === null) {
@@ -19,14 +26,10 @@ export async function topologyInit() {
     await new Promise((resolve) => setTimeout(resolve, 5000));
     canvas = getObject(node, OBJECT_ID);
   }
+
   // can add extra logic here
   node.addCustomGroupMessageHandler((e) => handleCanvasMessages(canvas, e));
   // TODO store canvas in browser storage
-
-  // also add it to the handlers file
-  node.addCustomMessageHandler("/counter-splash/presence/0.0.1", (e) =>
-    handlePresenceMessages(e),
-  );
 
   return node;
 }
