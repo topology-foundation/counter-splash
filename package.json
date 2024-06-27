@@ -27,7 +27,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@dimforge/rapier3d-compat": "^0.11.2",
+    "@dimforge/rapier3d-compat": "^0.13.1",
     "@theatre/core": "^0.7.2",
     "@threlte/core": "^7.3.0",
     "@threlte/extras": "^8.11.2",
