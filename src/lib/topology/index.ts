@@ -4,31 +4,14 @@ import { Pixel } from "./objects/pixel";
 import { GCounter } from "@topology-foundation/crdt";
 import { handleCanvasMessages } from "./handlers";
 
-const random_int = (max: number) => Math.floor(Math.random() * max);
+// exception just for the EthCC demo, the format is not this at all
+export const OBJECT_ID = "topology::counter_splash";
 
-async function paint_pixel(
-  node: TopologyNode,
-  canvas: ICanvas,
-  offset: [number, number],
-) {
-  // where should we handle the painting values?
-  // instead of pixel, we should paint area
-  const painting: [number, number, number] = [
-    random_int(256),
-    random_int(256),
-    random_int(256),
-  ];
-  canvas.paint(node.getPeerId(), offset, painting);
-  node.updateObject(
-    canvas,
-    `paint(${node.getPeerId()}, [${offset}], [${painting}])`,
-  );
-}
-
-async function init() {
+export async function init() {
   const node = new TopologyNode();
   await node.start();
 
+  await node.subscribeObject(OBJECT_ID);
   // can add extra logic here
   node.addCustomGroupMessageHandler((e) => handleCanvasMessages(canvas, e));
 
@@ -37,13 +20,11 @@ async function init() {
     console.log(e);
   });
 
-  // pre-created object with fixed id (?)
-  // let canvas = new Canvas(node.getPeerId(), 5, 10);
-  // node.createObject(canvas);
+  return node;
+}
 
-  await node.subscribeObject("");
-
-  let object: any = node.getObject("");
+export function getObject(node: TopologyNode, id: string): ICanvas {
+  let object: any = node.getObject(id);
   object["canvas"] = object["canvas"].map((x: any) =>
     x.map((y: any) => {
       y["red"] = Object.assign(new GCounter({}), y["red"]);
@@ -53,5 +34,18 @@ async function init() {
     }),
   );
 
-  let canvas = Object.assign(new Canvas(node.getPeerId(), 0, 0), object);
+  return Object.assign(new Canvas(node.getPeerId(), 0, 0), object);
+}
+
+export function paintBrush1(
+  node: TopologyNode,
+  canvas: ICanvas,
+  offset: [number, number],
+  color: [number, number, number],
+) {
+  canvas.paint(node.getPeerId(), offset, color);
+  node.updateObject(
+    canvas,
+    `paint(${node.getPeerId()}, [${offset}], [${color}])`,
+  );
 }
