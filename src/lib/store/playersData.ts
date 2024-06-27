@@ -1,37 +1,33 @@
-export type PlayerID = string;
+import { Vector3 } from 'three';
 
-export interface Position {
-  x: number;
-  y: number;
-  z: number;
-}
+export type PlayerID = string;
 
 export interface Player {
   id: PlayerID;
-  position: Position;
-  direction: number;
+  position: Vector3;
+  rotation: Vector3;
   state: 'running' | 'walking' | 'jumping';
 }
 
 export class PlayerData implements Player {
   id: PlayerID;
-  position: Position;
-  direction: number;
+  position: Vector3;
+  rotation: Vector3;
   state: 'running' | 'walking' | 'jumping';
 
-  constructor(id: PlayerID, x: number, y: number, z: number, direction: number, state: 'running' | 'walking' | 'jumping') {
+  constructor(id: PlayerID, x: number, y: number, z: number, rotationY: number, state: 'running' | 'walking' | 'jumping') {
     this.id = id;
-    this.position = { x, y, z };
-    this.direction = direction;
+    this.position = new Vector3(x, y, z);
+    this.rotation = new Vector3(0, rotationY, 0);
     this.state = state;
   }
 
   updatePosition(x: number, y: number, z: number) {
-    this.position = { x, y, z };
+    this.position.set(x, y, z);
   }
 
-  updateDirection(direction: number) {
-    this.direction = direction;
+  updateRotation(rotationY: number) {
+    this.rotation.set(0, rotationY, 0);
   }
 
   updateState(state: 'running' | 'walking' | 'jumping') {
