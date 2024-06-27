@@ -51,6 +51,10 @@
                                             label="azerty">AZERTY</Select.Item
                                         >
                                         <Select.Item
+                                            value="dvorak"
+                                            label="dvorak">DVORAK</Select.Item
+                                        >
+                                        <Select.Item
                                             value="qwerty"
                                             label="qwerty">QWERTY</Select.Item
                                         >

@@ -134,19 +134,27 @@
       jump: string;
       debug: string;
     }
-    const keyMapping: { [x: string]: any; qwerty?: KeyMapping; azerty?: KeyMapping; } = {
-      qwerty: {
-        forward: 'w',
-        backward: 's',
-        left: 'a',
-        right: 'd',
-        jump: ' ',
-        debug: 'i'
-      },
+    const keyMapping: { [x: string]: any; azerty?: KeyMapping; dvorak?: KeyMapping; qwerty?: KeyMapping; } = {
       azerty: {
         forward: 'z',
         backward: 's',
         left: 'q',
+        right: 'd',
+        jump: ' ',
+        debug: 'i'
+      },
+      dvorak: {
+        forward: ',',
+        backward: 'o',
+        left: 'a',
+        right: 'e',
+        jump: ' ',
+        debug: 'c'
+      },
+      qwerty: {
+        forward: 'w',
+        backward: 's',
+        left: 'a',
         right: 'd',
         jump: ' ',
         debug: 'i'
