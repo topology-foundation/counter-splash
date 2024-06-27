@@ -5,6 +5,7 @@
   import { spring } from 'svelte/motion'
   import { Mesh, Vector3 } from 'three'
   import Player from './Player.svelte'
+  import PlayersRendering from './PlayersRendering.svelte'
   import SplashWall from './map/SplashWall.svelte';
   import ObstacleObjects from './map/ObstacleObjects.svelte';
   import GenericPlaform from './map/GenericPlatform.svelte';
@@ -15,6 +16,7 @@
   import Level1Walls from './map/Level1/Level1Walls.svelte';
   import JumpPad from './map/JumpPad.svelte';
   import Level1 from './map/Level1/Level1.svelte';
+  import { Group } from 'lucide-svelte';
 
   interactivity()
 
@@ -78,6 +80,8 @@
       <ObstacleObjects seed={3241} center={[80, 35, 40]} containerHeight={70} containerWidth={60} containerLength={100} minSize={5} maxSize={7} numShapes={100} />
     </T.Group>
 </CollisionGroups>
+
+<PlayersRendering />
 
 <!--55 is top-->
 <CollisionGroups groups={[0]}>

@@ -2,7 +2,6 @@ import { addOrUpdatePlayer, removePlayer } from './playersManager';
 import type { PlayerID } from './playersData';
 
 export function initializePlayerData() {
-  // Generate some initial random players
   for (let i = 0; i < 10; i++) {
     const id = `player-${i}` as PlayerID;
     const x = Math.random() * 10 - 5;
@@ -16,7 +15,7 @@ export function initializePlayerData() {
   }
 }
 
-export function startP2PUpdates(callback: (id: PlayerID, x: number, y: number, z: number, rotationX: number, rotationY: number, rotationZ: number, state: 'running' | 'walking' | 'jumping') => void) {
+export function startP2PUpdates(callback: (id: PlayerID, x: number, y: number, z: number, rotationX: number, rotationY: number, rotationZ: number, state: 'running' | 'walking' | 'jumping') => void, interval: number = 1000) {
   // Simulate P2P updates
   setInterval(() => {
     const id = `player-${Math.floor(Math.random() * 10)}` as PlayerID;
@@ -28,5 +27,5 @@ export function startP2PUpdates(callback: (id: PlayerID, x: number, y: number, z
     const rotationZ = Math.random() * Math.PI * 2;
     const state = ['running', 'walking', 'jumping'][Math.floor(Math.random() * 3)];
     callback(id, x, y, z, rotationX, rotationY, rotationZ, state);
-  }, 1000); // Update every second
+  }, interval);
 }
