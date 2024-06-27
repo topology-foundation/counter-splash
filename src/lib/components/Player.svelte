@@ -122,7 +122,7 @@
       
       setPlayerPosition([pos.x, pos.y, pos.z])
 
-      console.log($debugMode)
+      // console.log($debugMode)
     })
 
     
