@@ -1,24 +1,33 @@
-import { Vector3 } from 'three';
+import { Vector3, Euler } from 'three';
 
 export type PlayerID = string;
 
 export interface Player {
   id: PlayerID;
   position: Vector3;
-  rotation: Vector3;
+  rotation: Euler;
   state: 'running' | 'walking' | 'jumping';
 }
 
 export class PlayerData implements Player {
   id: PlayerID;
   position: Vector3;
-  rotation: Vector3;
+  rotation: Euler;
   state: 'running' | 'walking' | 'jumping';
 
-  constructor(id: PlayerID, x: number, y: number, z: number, rotationY: number, state: 'running' | 'walking' | 'jumping') {
+  constructor(
+      id: PlayerID, 
+      x: number, 
+      y: number, 
+      z: number, 
+      rotationX: number, 
+      rotationY: number, 
+      rotationZ: number, 
+      state: 'running' | 'walking' | 'jumping'
+    ){
     this.id = id;
     this.position = new Vector3(x, y, z);
-    this.rotation = new Vector3(0, rotationY, 0);
+    this.rotation = new Euler(rotationX, rotationY, rotationZ);
     this.state = state;
   }
 
@@ -26,8 +35,8 @@ export class PlayerData implements Player {
     this.position.set(x, y, z);
   }
 
-  updateRotation(rotationY: number) {
-    this.rotation.set(0, rotationY, 0);
+  updateRotation(rotationX: number, rotationY: number, rotationZ: number) {
+    this.rotation.set(rotationX, rotationY, rotationZ);
   }
 
   updateState(state: 'running' | 'walking' | 'jumping') {
