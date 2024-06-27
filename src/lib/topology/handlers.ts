@@ -19,7 +19,7 @@ export const handleCanvasMessages = (canvas: ICanvas, e: any) => {
 };
 
 function handleObjectUpdate(canvas: ICanvas, fn: string) {
-  // In this case we only have paint
+  // TODO: parse every brush type
   // `paint(${node.getPeerId()}, [${[x, y]}], [${painting}])`
   let args = fn.replace("paint(", "").replace(")", "").split(", ");
   let offset_p = args[1]
@@ -40,4 +40,8 @@ function handleObjectUpdate(canvas: ICanvas, fn: string) {
   } catch (e) {
     console.error(e);
   }
+}
+
+export function handlePresenceMessages(e: any) {
+  return e;
 }

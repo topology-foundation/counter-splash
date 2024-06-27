@@ -10,13 +10,16 @@
     import { PerfMonitor } from "@threlte/extras";
     import Position from "./ui/position/position.svelte";
     import { debugMode } from "$lib/store/player";
+    import { topologyInit } from "$lib/topology";
 
     let keyboard: any;
 
-    onMount(() => {
+    onMount(async () => {
         selectedKeyboard.subscribe((value) => {
             keyboard = { value };
         });
+
+        await topologyInit();
     });
 
     $: if (keyboard && keyboard.value) {
