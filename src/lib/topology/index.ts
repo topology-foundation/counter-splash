@@ -13,17 +13,22 @@ export async function topologyInit() {
   // through the canvas loop
   const node = new TopologyNode();
   await node.start();
-  await node.subscribeObject(OBJECT_ID);
 
   // also add it to the handlers file
   node.addCustomMessageHandler("/counter-splash/presence/0.0.1", (e) =>
     handlePresenceMessages(e),
   );
 
+  while (node.getPeers().length < 2) {
+    console.log("waiting for peers");
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+
   let canvas = getObject(node, OBJECT_ID);
   while (canvas === null) {
-    console.log("waiting for canvas");
+    console.log("waiting for canvas", node.getPeers());
     await new Promise((resolve) => setTimeout(resolve, 5000));
+    await node.subscribeObject(OBJECT_ID);
     canvas = getObject(node, OBJECT_ID);
   }
 
