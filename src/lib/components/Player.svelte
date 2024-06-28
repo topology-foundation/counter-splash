@@ -14,7 +14,7 @@
   import { cubicOut } from "svelte/easing";
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
-  import { createEventHandlers } from "./player/EventHandler"; 
+  import { createEventHandlers } from "./player/eventHandler"; 
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
