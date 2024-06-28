@@ -12,8 +12,9 @@
   import { setPlayerPosition } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
-  import Paint from "./player/Paint.svelte";
-  import { createEventHandlers } from "./player/EventHandler"; // Import the event handler functions
+  import { onMount } from "svelte";
+  import { handlePainting } from "./player/paintLogic";
+  import { createEventHandlers } from "./player/EventHandler"; 
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
@@ -32,6 +33,13 @@
   const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
 
   const { onKeyDown, onKeyUp, getControls } = createEventHandlers();
+
+  let intervalId: any;
+
+  onMount(() => {
+    intervalId = setInterval(handlePainting, 16);
+    return () => clearInterval(intervalId);
+  });
 
   $: zoomLevel.subscribe((value) => {
     if (cam) {
@@ -92,8 +100,6 @@
 </script>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
-
-<Paint />
 
 <T.Group position.y={0.9}>
   <T.PerspectiveCamera
