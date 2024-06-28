@@ -13,14 +13,11 @@
   } from "three";
   import PointerLockControls from "../PointerLockControls.svelte";
   import { selectedKeyboard, keyMapping } from "$lib/store/settings";
-  import {
-    paintMode,
-    debugMode,
-  } from "$lib/store/player";
+  import { paintMode, debugMode } from "$lib/store/player";
   import { setPlayerPosition, setDebugMode } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
-  import Paint from "./Paint.svelte"
+  import Paint from "./Paint.svelte";
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
@@ -82,7 +79,7 @@
     position = [pos.x, pos.y, pos.z];
     if (jump && touchingGround) {
       t.y = jumpForce;
-      jump = false; 
+      jump = false;
     }
     rigidBody.setLinvel(t, true);
   }
@@ -91,7 +88,8 @@
     const pos = rigidBody.translation();
     raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
     const intersects = raycaster.intersectObject(scene, true);
-    touchingGround = intersects.length > 0 && intersects[0].distance < height / 2 + 0.5;
+    touchingGround =
+      intersects.length > 0 && intersects[0].distance < height / 2 + 0.5;
   }
 
   function handleOutOfBounds() {
@@ -102,7 +100,6 @@
       cam.rotation.set(0, 0, 0);
     }
   }
-
 
   function onKeyDown(e: KeyboardEvent) {
     const mapping = keyMapping[$selectedKeyboard];
