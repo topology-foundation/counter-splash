@@ -3,6 +3,10 @@
     import { Euler, Camera, Quaternion } from 'three'
     import { useThrelte, useParent } from '@threlte/core'
     import { paintMode, canPaint } from '$lib/store/player'
+    import { selectedKeyboard } from '$lib/store/settings'
+    import { keyMapping } from '$lib/store/settings'
+    import type { KeyMapping } from '$lib/store/settings'
+    import { get } from 'svelte/store'
     import TWEEN, { Tween, Easing } from '@tweenjs/tween.js'
   
     // Set to constrain the pitch of the camera
@@ -95,7 +99,10 @@
 
     function onKeyDown(event: KeyboardEvent) {
       event.preventDefault()
-      if (event.key === 'e') {
+      const mapping = keyMapping[get(selectedKeyboard)];
+      const paintKey = mapping.paint;
+
+      if (event.key === paintKey) {
         if (isLocked) {
           unlock()
             paintMode.set(true)
