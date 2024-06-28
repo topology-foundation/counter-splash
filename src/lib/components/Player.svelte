@@ -2,13 +2,10 @@
   import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
   import { T, useTask, useThrelte } from "@threlte/core";
   import { RigidBody, CollisionGroups, Collider } from "@threlte/rapier";
-  import { onMount } from "svelte";
   import {
     PerspectiveCamera,
     Vector3,
     Raycaster,
-    CircleGeometry,
-    MeshBasicMaterial,
     Mesh,
   } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
@@ -50,18 +47,6 @@
     }
   });
 
-  onMount(() => {
-    setupDot();
-  });
-
-  function setupDot() {
-    const dotGeometry = new CircleGeometry(0.01, 32);
-    const dotMaterial = new MeshBasicMaterial({ color: 0xffffff });
-    dot = new Mesh(dotGeometry, dotMaterial);
-    dot.position.set(0, 0, -0.5);
-    cam.add(dot);
-  }
-
   useTask(() => {
     if (!rigidBody) return;
     handleMovement();
@@ -93,7 +78,6 @@
   }
 
   function handleOutOfBounds() {
-    const pos = rigidBody.translation();
     if (t.y < -50) {
       rigidBody.setTranslation(new Vector3(0, -3, 25), true);
       rigidBody.setLinvel(new Vector3(0, -5, 0), true);
