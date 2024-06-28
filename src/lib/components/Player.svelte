@@ -11,13 +11,13 @@
     MeshBasicMaterial,
     Mesh,
   } from "three";
-  import PointerLockControls from "../PointerLockControls.svelte";
+  import PointerLockControls from "./PointerLockControls.svelte";
   import { selectedKeyboard, keyMapping } from "$lib/store/settings";
   import { paintMode, debugMode } from "$lib/store/player";
   import { setPlayerPosition, setDebugMode } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
-  import Paint from "./Paint.svelte";
+  import Paint from "./player/Paint.svelte";
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
