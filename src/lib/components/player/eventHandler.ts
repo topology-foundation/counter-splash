@@ -12,7 +12,7 @@ export function createEventHandlers() {
 
   function onKeyDown(e: KeyboardEvent) {
     const selectedKey = get(selectedKeyboard);
-    const mapping = keyMapping[selectedKey];    
+    const mapping = keyMapping[selectedKey];
     switch (e.key) {
       case mapping.backward:
       case "ArrowDown":
@@ -45,7 +45,7 @@ export function createEventHandlers() {
 
   function onKeyUp(e: KeyboardEvent) {
     const selectedKey = get(selectedKeyboard);
-    const mapping = keyMapping[selectedKey];    
+    const mapping = keyMapping[selectedKey];
     switch (e.key) {
       case mapping.backward:
       case "ArrowDown":
@@ -76,6 +76,6 @@ export function createEventHandlers() {
   return {
     onKeyDown,
     onKeyUp,
-    getControls: () => ({ forward, backward, left, right, jump })
+    getControls: () => ({ forward, backward, left, right, jump }),
   };
 }

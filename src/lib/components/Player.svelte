@@ -2,11 +2,7 @@
   import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
   import { T, useTask, useThrelte } from "@threlte/core";
   import { RigidBody, CollisionGroups, Collider } from "@threlte/rapier";
-  import {
-    PerspectiveCamera,
-    Vector3,
-    Raycaster,
-  } from "three";
+  import { PerspectiveCamera, Vector3, Raycaster } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
   import { paintMode } from "$lib/store/player";
   import { setPlayerPosition } from "$lib/store/player";
@@ -14,7 +10,7 @@
   import { cubicOut } from "svelte/easing";
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
-  import { createEventHandlers } from "./player/eventHandler"; 
+  import { createEventHandlers } from "./player/eventHandler";
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
@@ -57,7 +53,13 @@
     setPlayerPosition(position);
   });
 
-  function handleMovement(forward: number, backward: number, left: number, right: number, jump: boolean) {
+  function handleMovement(
+    forward: number,
+    backward: number,
+    left: number,
+    right: number,
+    jump: boolean,
+  ) {
     const velVec = t.set(right - left, 0, backward - forward);
     velVec.applyEuler(cam.rotation).multiplyScalar(speed);
     const linVel = rigidBody.linvel();
