@@ -45,8 +45,6 @@
   }
 </script>
 
-<Environment path="/hdr/" files="shanghai_riverside_1k.hdr" />
-
 <T.AmbientLight intensity={0.6} />
 
 <T.DirectionalLight castShadow position={[8, 1000, -3]} intensity={1} />
