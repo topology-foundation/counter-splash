@@ -5,7 +5,7 @@
     import { onMount } from 'svelte'
     import { PerspectiveCamera, Vector3, Raycaster, Vector2, CircleGeometry, MeshBasicMaterial, Mesh } from 'three'
     import PointerLockControls from './PointerLockControls.svelte'
-    import { selectedKeyboard } from '$lib/store/settings'
+    import { selectedKeyboard, keyMapping } from '$lib/store/settings'
     import { paintMode, isMouseDown, mousePosition, isIntersect, selectedColor, debugMode } from '$lib/store/player'
     import { get } from 'svelte/store'
     import { updatePixels } from '$lib/store/wall';
@@ -125,35 +125,6 @@
       console.log($debugMode)
     })
 
-    
-    interface KeyMapping {
-      forward: string;
-      backward: string;
-      left: string;
-      right: string;
-      jump: string;
-      debug: string;
-    }
-    const keyMapping: { [x: string]: any; qwerty?: KeyMapping; azerty?: KeyMapping; } = {
-      qwerty: {
-        forward: 'w',
-        backward: 's',
-        left: 'a',
-        right: 'd',
-        jump: ' ',
-        debug: 'i'
-      },
-      azerty: {
-        forward: 'z',
-        backward: 's',
-        left: 'q',
-        right: 'd',
-        jump: ' ',
-        debug: 'i'
-      },
-      // Add other keyboard layouts here
-    }
-  
     function onKeyDown(e: KeyboardEvent) {
       const mapping = keyMapping[$selectedKeyboard];
       switch (e.key) {
