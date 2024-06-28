@@ -1,6 +1,10 @@
-import { updatePixels } from './store/wall';
+import { updatePixels } from "./store/wall";
 
-export function generateRandomPixels(width: number, height: number, count: number) {
+export function generateRandomPixels(
+  width: number,
+  height: number,
+  count: number,
+) {
   const updates = [];
   for (let i = 0; i < count; i++) {
     const x = Math.floor(Math.random() * width);
@@ -9,20 +13,18 @@ export function generateRandomPixels(width: number, height: number, count: numbe
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
     const a = 255;
-   // updates.push({ x, y, r, g, b, a });
+    // updates.push({ x, y, r, g, b, a });
   }
 
-
-  for(let i = 500; i < 1000; i++) {
-    for(let j = 500; j < 1000; j++) {
-      updates.push( i, j , 255, 255, 255, 255)
+  for (let i = 500; i < 1000; i++) {
+    for (let j = 500; j < 1000; j++) {
+      updates.push(i, j, 255, 255, 255, 255);
     }
   }
   updatePixels(updates);
 }
 
 export function initPixelToImage(imageUrl: string) {
-
   // Create an image element
   const image = new Image();
 
@@ -32,8 +34,8 @@ export function initPixelToImage(imageUrl: string) {
   // Wait for the image to load
   image.onload = () => {
     // Create a canvas element
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
     // Set the canvas dimensions to match the image
     canvas.width = image.width;
@@ -57,7 +59,7 @@ export function initPixelToImage(imageUrl: string) {
 
       // Calculate x and y coordinates based on pixel index
       const x = (i / 4) % canvas.width;
-      const y = canvas.height - Math.floor((i / 4) / canvas.width);
+      const y = canvas.height - Math.floor(i / 4 / canvas.width);
 
       // Push pixel data to updates array
       updates.push({ x, y, r, g, b, a });
@@ -66,5 +68,4 @@ export function initPixelToImage(imageUrl: string) {
     // 'updates' array now contains pixel data for the entire image
     updatePixels(updates);
   };
-
 }

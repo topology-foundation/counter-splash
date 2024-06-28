@@ -1,19 +1,19 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { Canvas } from '@threlte/core';
-  import { World } from '@threlte/rapier';
-  import Scene from './Scene.svelte';
-  import { selectedKeyboard } from '$lib/store/settings'; 
-  import Ui from './ui/paintMode/Ui.svelte';
-  import { PerfMonitor } from '@threlte/extras';
-  import Position from './ui/position/position.svelte';
-  import { debugMode } from '$lib/store/player';
-  import Settings from './ui/settings.svelte';
+  import { onMount } from "svelte";
+  import { Canvas } from "@threlte/core";
+  import { World } from "@threlte/rapier";
+  import Scene from "./Scene.svelte";
+  import { selectedKeyboard } from "$lib/store/settings";
+  import Ui from "./ui/paintMode/Ui.svelte";
+  import { PerfMonitor } from "@threlte/extras";
+  import Position from "./ui/position/position.svelte";
+  import { debugMode } from "$lib/store/player";
+  import Settings from "./ui/settings.svelte";
 
-  let keyboard : any
+  let keyboard: any;
 
   onMount(() => {
-    selectedKeyboard.subscribe(value => {
+    selectedKeyboard.subscribe((value) => {
       keyboard = { value };
     });
   });
@@ -32,15 +32,14 @@
     <Settings />
     {#if $debugMode}
       <Position />
-    {/if} 
+    {/if}
   </div>
 </div>
 
 <div class="relative h-full w-full">
-  
   <Canvas>
     {#if $debugMode}
-      <PerfMonitor anchorX={'left'} logsPerSecond={30}/>
+      <PerfMonitor anchorX={"left"} logsPerSecond={30} />
     {/if}
     <World>
       <Scene />

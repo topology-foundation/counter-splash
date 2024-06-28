@@ -1,0 +1,38 @@
+name: Format Code with Prettier
+
+on:
+  pull_request:
+    paths:
+      - "**/*.ts"
+      - "**/*.svelte"
+
+jobs:
+  format:
+    name: Run Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "21"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Prettier
+        run: npm run format
+
+      - name: Check for formatting changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          BRANCH_NAME=$(echo $GITHUB_REF | sed 's#refs/heads/##')
+          git diff --exit-code || (
+            git add -A &&
+            git commit -m "Apply Prettier formatting" &&
+            git push origin HEAD:$BRANCH_NAME
+          )
