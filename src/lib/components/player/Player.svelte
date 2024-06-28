@@ -7,26 +7,20 @@
     PerspectiveCamera,
     Vector3,
     Raycaster,
-    Vector2,
     CircleGeometry,
     MeshBasicMaterial,
     Mesh,
   } from "three";
-  import PointerLockControls from "./PointerLockControls.svelte";
+  import PointerLockControls from "../PointerLockControls.svelte";
   import { selectedKeyboard, keyMapping } from "$lib/store/settings";
   import {
     paintMode,
-    isMouseDown,
-    mousePosition,
-    isIntersect,
-    selectedColor,
     debugMode,
   } from "$lib/store/player";
-  import { get } from "svelte/store";
-  import { updatePixels } from "$lib/store/wall";
   import { setPlayerPosition, setDebugMode } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
+  import Paint from "./Paint.svelte"
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
@@ -47,14 +41,9 @@
   let dot: Mesh;
 
   const t = new Vector3();
-
-  const lockControls = () => lock();
-
-  const { renderer, scene } = useThrelte();
-
+  const { scene } = useThrelte();
   const raycaster = new Raycaster();
   let touchingGround = false;
-
   const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
 
   $: zoomLevel.subscribe((value) => {
@@ -65,86 +54,55 @@
   });
 
   onMount(() => {
-    // Create a circle geometry
-    const dotGeometry = new CircleGeometry(0.01, 32); // Adjust the radius and segments as needed
-
-    // Create a material
-    const dotMaterial = new MeshBasicMaterial({ color: 0xffffff });
-
-    // Create a mesh using this geometry and material
-    dot = new Mesh(dotGeometry, dotMaterial);
-
-    // Position the dot in the center of the camera
-    dot.position.set(0, 0, -0.5);
-
-    // Add the dot to the camera
-    cam.add(dot);
+    setupDot();
   });
+
+  function setupDot() {
+    const dotGeometry = new CircleGeometry(0.01, 32);
+    const dotMaterial = new MeshBasicMaterial({ color: 0xffffff });
+    dot = new Mesh(dotGeometry, dotMaterial);
+    dot.position.set(0, 0, -0.5);
+    cam.add(dot);
+  }
 
   useTask(() => {
     if (!rigidBody) return;
-    // get direction
-    const velVec = t.fromArray([right - left, 0, backward - forward]);
-    // sort rotate and multiply by speed
+    handleMovement();
+    handleGrounding();
+    handleOutOfBounds();
+    setPlayerPosition(position);
+  });
+
+  function handleMovement() {
+    const velVec = t.set(right - left, 0, backward - forward);
     velVec.applyEuler(cam.rotation).multiplyScalar(speed);
-    // don't override falling velocity
     const linVel = rigidBody.linvel();
     t.y = linVel.y;
-    // when body position changes update position prop for camera
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
-
-    // Turn raycaster downwards to check for ground intersections
-    raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
-
-    const intersects = raycaster.intersectObject(scene, true);
-
-    // START Jump Logic
-    const intersectsWithJumpPad = intersects.find(
-      (intersect) => intersect.object.name === "jumpPad",
-    );
-
     if (jump && touchingGround) {
       t.y = jumpForce;
-      jump = false;
+      jump = false; 
     }
-
-    // *groundingTolerance* Allows a player to jump even if there is a slight amount of distance between player and ground
-    // This extra distance happens whern a player is floaty and walking down a slope
-    const groundingTolerance = 0.5;
-
-    if (
-      intersectsWithJumpPad &&
-      intersectsWithJumpPad?.distance < height / 2 + groundingTolerance
-    ) {
-      t.y = jump ? 22 : 15;
-      jump = false;
-    }
-
-    // finally set the velocities and wake up the body
     rigidBody.setLinvel(t, true);
+  }
 
-    // END Jump Logic
+  function handleGrounding() {
+    const pos = rigidBody.translation();
+    raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
+    const intersects = raycaster.intersectObject(scene, true);
+    touchingGround = intersects.length > 0 && intersects[0].distance < height / 2 + 0.5;
+  }
 
-    if (
-      intersects.length > 0 &&
-      intersects[0].distance < height / 2 + groundingTolerance
-    ) {
-      touchingGround = true;
-    } else {
-      touchingGround = false;
-    }
-
+  function handleOutOfBounds() {
+    const pos = rigidBody.translation();
     if (t.y < -50) {
       rigidBody.setTranslation(new Vector3(0, -3, 25), true);
       rigidBody.setLinvel(new Vector3(0, -5, 0), true);
       cam.rotation.set(0, 0, 0);
     }
+  }
 
-    setPlayerPosition([pos.x, pos.y, pos.z]);
-
-    console.log($debugMode);
-  });
 
   function onKeyDown(e: KeyboardEvent) {
     const mapping = keyMapping[$selectedKeyboard];
@@ -218,81 +176,11 @@
       zoomLevel.set(1);
     }
   }
-
-  let lastMousePosition: { x: number; y: number } | null = null;
-
-  $: if ($isMouseDown && $paintMode && !$isIntersect) {
-    // Convert the UV coordinates to pixel coordinates
-    const x = Math.floor($mousePosition.x * 4000);
-    const y = Math.floor($mousePosition.y * 3000);
-
-    if (lastMousePosition) {
-      const lastX = Math.floor(lastMousePosition.x * 4000);
-      const lastY = Math.floor(lastMousePosition.y * 3000);
-      drawLine(lastX, lastY, x, y);
-    }
-
-    lastMousePosition = { x: $mousePosition.x, y: $mousePosition.y };
-  }
-
-  function drawLine(x0: number, y0: number, x1: number, y1: number): void {
-    const updates: {
-      x: number;
-      y: number;
-      r: number;
-      g: number;
-      b: number;
-      a: number;
-    }[] = [];
-    const dx = Math.abs(x1 - x0);
-    const dy = Math.abs(y1 - y0);
-    const sx = x0 < x1 ? 1 : -1;
-    const sy = y0 < y1 ? 1 : -1;
-    let err = dx - dy;
-
-    while (true) {
-      drawCircle(updates, x0, y0);
-
-      if (x0 === x1 && y0 === y1) break;
-      const e2 = err * 2;
-      if (e2 > -dy) {
-        err -= dy;
-        x0 += sx;
-      }
-      if (e2 < dx) {
-        err += dx;
-        y0 += sy;
-      }
-    }
-    updatePixels(updates);
-  }
-  function drawCircle(
-    updates: {
-      x: number;
-      y: number;
-      r: number;
-      g: number;
-      b: number;
-      a: number;
-    }[],
-    x: number,
-    y: number,
-  ): void {
-    const { r, g, b, a } = get(selectedColor);
-    for (let i = -10; i < 10; i++) {
-      for (let j = -10; j < 10; j++) {
-        if (i * i + j * j < 100) {
-          updates.push({ x: x + i, y: y + j, r, g, b, a });
-        }
-      }
-    }
-  }
-  $: if (!$isMouseDown || $isIntersect) {
-    lastMousePosition = null;
-  }
 </script>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
+
+<Paint />
 
 <T.Group position.y={0.9}>
   <T.PerspectiveCamera
