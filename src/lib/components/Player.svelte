@@ -6,15 +6,14 @@
     PerspectiveCamera,
     Vector3,
     Raycaster,
-    Mesh,
   } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
-  import { selectedKeyboard, keyMapping } from "$lib/store/settings";
-  import { paintMode, debugMode } from "$lib/store/player";
-  import { setPlayerPosition, setDebugMode } from "$lib/store/player";
+  import { paintMode } from "$lib/store/player";
+  import { setPlayerPosition } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import Paint from "./player/Paint.svelte";
+  import { createEventHandlers } from "./player/EventHandler"; // Import the event handler functions
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
@@ -26,17 +25,13 @@
   let lock: () => void;
   let cam: PerspectiveCamera;
 
-  let forward = 0;
-  let backward = 0;
-  let left = 0;
-  let right = 0;
-  let jump = false;
-
   const t = new Vector3();
   const { scene } = useThrelte();
   const raycaster = new Raycaster();
   let touchingGround = false;
   const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
+
+  const { onKeyDown, onKeyUp, getControls } = createEventHandlers();
 
   $: zoomLevel.subscribe((value) => {
     if (cam) {
@@ -47,13 +42,14 @@
 
   useTask(() => {
     if (!rigidBody) return;
-    handleMovement();
+    const { forward, backward, left, right, jump } = getControls();
+    handleMovement(forward, backward, left, right, jump);
     handleGrounding();
     handleOutOfBounds();
     setPlayerPosition(position);
   });
 
-  function handleMovement() {
+  function handleMovement(forward: number, backward: number, left: number, right: number, jump: boolean) {
     const velVec = t.set(right - left, 0, backward - forward);
     velVec.applyEuler(cam.rotation).multiplyScalar(speed);
     const linVel = rigidBody.linvel();
@@ -80,68 +76,6 @@
       rigidBody.setTranslation(new Vector3(0, -3, 25), true);
       rigidBody.setLinvel(new Vector3(0, -5, 0), true);
       cam.rotation.set(0, 0, 0);
-    }
-  }
-
-  function onKeyDown(e: KeyboardEvent) {
-    const mapping = keyMapping[$selectedKeyboard];
-    switch (e.key) {
-      case mapping.backward:
-      case "ArrowDown":
-        backward = 1;
-        break;
-      case mapping.forward:
-      case "ArrowUp":
-        forward = 1;
-        break;
-      case mapping.left:
-      case "ArrowLeft":
-        left = 1;
-        break;
-      case mapping.right:
-      case "ArrowRight":
-        right = 1;
-        break;
-      case mapping.jump:
-        if (e.key === mapping.jump || e.key === " ") {
-          jump = true;
-        }
-        break;
-      case mapping.debug:
-        setDebugMode(!$debugMode);
-        break;
-      default:
-        break;
-    }
-  }
-
-  function onKeyUp(e: KeyboardEvent) {
-    const mapping = keyMapping[$selectedKeyboard];
-
-    switch (e.key) {
-      case mapping.backward:
-      case "ArrowDown":
-        backward = 0;
-        break;
-      case mapping.forward:
-      case "ArrowUp":
-        forward = 0;
-        break;
-      case mapping.left:
-      case "ArrowLeft":
-        left = 0;
-        break;
-      case mapping.right:
-      case "ArrowRight":
-        right = 0;
-        break;
-      case mapping.jump:
-        if (e.key === mapping.jump || e.key === " ") {
-          jump = false;
-        }
-        break;
-      default:
-        break;
     }
   }
 
