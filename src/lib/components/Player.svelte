@@ -32,8 +32,6 @@
   let right = 0;
   let jump = false;
 
-  let dot: Mesh;
-
   const t = new Vector3();
   const { scene } = useThrelte();
   const raycaster = new Raycaster();
