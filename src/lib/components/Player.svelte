@@ -66,7 +66,7 @@
     t.y = linVel.y;
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
-    
+
     raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
     const intersects = raycaster.intersectObject(scene, true);
     const intersectsWithJumpPad = intersects.find(
