@@ -66,6 +66,25 @@
     t.y = linVel.y;
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
+    
+    raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
+    const intersects = raycaster.intersectObject(scene, true);
+    const intersectsWithJumpPad = intersects.find(
+      (intersect) => intersect.object.name === "jumpPad",
+    );
+
+    // *groundingTolerance* Allows a player to jump even if there is a slight amount of distance between player and ground
+    // This extra distance happens whern a player is floaty and walking down a slope
+    const groundingTolerance = 0.5;
+
+    if (
+      intersectsWithJumpPad &&
+      intersectsWithJumpPad?.distance < height / 2 + groundingTolerance
+    ) {
+      t.y = jump ? 22 : 15;
+      jump = false;
+    }
+
     if (jump && touchingGround) {
       t.y = jumpForce;
       jump = false;
