@@ -47,11 +47,31 @@
   useTask(() => {
     if (!rigidBody) return;
     const { forward, backward, left, right, jump } = getControls();
-    handleMovement(forward, backward, left, right, jump);
+    let updatedJump = handleJumpPad(jump);
+    handleMovement(forward, backward, left, right, updatedJump);
     handleGrounding();
     handleOutOfBounds();
     setPlayerPosition(position);
   });
+
+  function handleJumpPad(jump: boolean): boolean {
+    const pos = rigidBody.translation();
+    raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
+    const intersects = raycaster.intersectObject(scene, true);
+    const intersectsWithJumpPad = intersects.find(
+      (intersect) => intersect.object.name === "jumpPad",
+    );
+
+    if (
+      intersectsWithJumpPad &&
+      intersectsWithJumpPad?.distance < height / 2 + 0.5
+    ) {
+      t.y = jump ? 22 : 15;
+      return false;
+    }
+
+    return true;
+  }
 
   function handleMovement(
     forward: number,
@@ -66,6 +86,7 @@
     t.y = linVel.y;
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
+
     if (jump && touchingGround) {
       t.y = jumpForce;
       jump = false;
