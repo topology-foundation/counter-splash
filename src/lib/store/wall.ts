@@ -4,27 +4,20 @@ const width = 4000;
 const height = 3000;
 const size = width * height * 4; // RGBA format
 
-// const initialPixelData = new Uint8Array(size); // white canvas set up
-// for (let i = 0; i < size; i += 4) {
-//   initialPixelData[i] = 255;     // Red
-//   initialPixelData[i + 1] = 255; // Green
-//   initialPixelData[i + 2] = 255; // Blue
-//   initialPixelData[i + 3] = 255; // Alpha
-// }
-const initialPixelData = new Uint8Array(size); //black canvas set up
+const initialPixelData = new Uint8Array(size); // black canvas set up
 
 export const pixels = writable<Uint8Array>(initialPixelData);
 
-export function updatePixels(
-  updates: {
-    x: number;
-    y: number;
-    r: number;
-    g: number;
-    b: number;
-    a: number;
-  }[],
-): void {
+interface PixelUpdate {
+  x: number;
+  y: number;
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+}
+
+export function updatePixels(updates: PixelUpdate[]): void {
   pixels.update((p) => {
     const newPixels = p.slice();
     updates.forEach(({ x, y, r, g, b, a }) => {
@@ -36,6 +29,26 @@ export function updatePixels(
     });
     return newPixels;
   });
+}
+
+export function updateTexture(
+  gl: WebGLRenderingContext,
+  texture: WebGLTexture,
+  newPixels: Uint8Array
+): void {
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texSubImage2D(
+    gl.TEXTURE_2D,
+    0,
+    0,
+    0,
+    width,
+    height,
+    gl.RGBA,
+    gl.UNSIGNED_BYTE,
+    newPixels
+  );
+  gl.bindTexture(gl.TEXTURE_2D, null);
 }
 
 export { width, height };
