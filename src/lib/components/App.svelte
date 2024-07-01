@@ -9,6 +9,7 @@
   import Position from "./ui/position/position.svelte";
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
+  import SprayWheel from "./ui/sprayWheel.svelte";
 
   let keyboard: any;
 
@@ -25,6 +26,7 @@
 
 <div class="absolute">
   <Ui />
+  <SprayWheel />
 </div>
 
 <div>

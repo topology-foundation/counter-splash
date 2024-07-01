@@ -42,3 +42,5 @@ export const canPaint = writable(false);
 export function setCanPaint(value: boolean) {
   canPaint.set(value);
 }
+
+export const sprayWheel = writable(false);

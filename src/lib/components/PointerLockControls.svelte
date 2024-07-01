@@ -2,7 +2,7 @@
   import { createEventDispatcher, onDestroy } from "svelte";
   import { Euler, Camera, Quaternion } from "three";
   import { useThrelte, useParent } from "@threlte/core";
-  import { paintMode, canPaint } from "$lib/store/player";
+  import { paintMode, sprayWheel } from "$lib/store/player";
   import { selectedKeyboard } from "$lib/store/settings";
   import { keyMapping } from "$lib/store/settings";
   import type { KeyMapping } from "$lib/store/settings";
@@ -59,7 +59,8 @@
     "pointerlockerror",
     onPointerlockError,
   );
-  // domElement.ownerDocument.addEventListener("keydown", onKeyDown);
+  domElement.ownerDocument.addEventListener("keydown", onKeyDown);
+  domElement.ownerDocument.addEventListener("keyup", onKeyUp);
   domElement.ownerDocument.addEventListener("mousedown", onMouseDown);
 
   onDestroy(() => {
@@ -72,7 +73,8 @@
       "pointerlockerror",
       onPointerlockError,
     );
-    // domElement.ownerDocument.removeEventListener("keydown", onKeyDown);
+    domElement.ownerDocument.removeEventListener("keydown", onKeyDown);
+    domElement.ownerDocument.removeEventListener("keyup", onKeyUp);
     domElement.ownerDocument.removeEventListener("mousedown", onMouseDown);
   });
 
@@ -115,43 +117,28 @@
     console.error("PointerLockControls: Unable to use Pointer Lock API");
   }
 
-  // function onKeyDown(event: KeyboardEvent) {
-  //   event.preventDefault();
-  //   const mapping = keyMapping[get(selectedKeyboard)];
-  //   const paintKey = mapping.paint;
+  function onKeyDown(event: KeyboardEvent) {
+    event.preventDefault();
+    const mapping = keyMapping[get(selectedKeyboard)];
+    const paintKey = mapping.paint;
 
-  //   if (event.key === paintKey) {
-  //     if (isLocked) {
-  //       unlock();
-  //       paintMode.set(true);
-  //       pointCameraToXAxis();
-  //     } else {
-  //       lock();
-  //     }
-  //   }
-  // }
-
-  function pointCameraToXAxis() {
-    if (!$camera) return;
-
-    const initialQuaternion = $camera.quaternion.clone();
-    const targetEuler = new Euler(0, 0, 0, "YXZ");
-    const targetQuaternion = new Quaternion().setFromEuler(targetEuler);
-
-    new Tween(initialQuaternion)
-      .to(targetQuaternion, 500)
-      .easing(Easing.Quadratic.InOut)
-      .onUpdate(() => {
-        $camera.quaternion.copy(initialQuaternion);
-        onChange();
-      })
-      .start();
+    if (event.key === paintKey) {
+      if (isLocked) {
+        unlock();
+        sprayWheel.set(true);
+      }
+    }
   }
 
-  function animate(time: number) {
-    requestAnimationFrame(animate);
-    TWEEN.update(time);
-  }
+  function onKeyUp(event: KeyboardEvent) {
+    const mapping = keyMapping[get(selectedKeyboard)];
+    const paintKey = mapping.paint;
 
-  animate(0);
+    if (event.key === paintKey) {
+      if (!isLocked) {
+        lock();
+        sprayWheel.set(false);
+      }
+    }
+  }
 </script>
