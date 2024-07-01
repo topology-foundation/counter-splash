@@ -31,24 +31,4 @@ export function updatePixels(updates: PixelUpdate[]): void {
   });
 }
 
-export function updateTexture(
-  gl: WebGLRenderingContext,
-  texture: WebGLTexture,
-  newPixels: Uint8Array
-): void {
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-  gl.texSubImage2D(
-    gl.TEXTURE_2D,
-    0,
-    0,
-    0,
-    width,
-    height,
-    gl.RGBA,
-    gl.UNSIGNED_BYTE,
-    newPixels
-  );
-  gl.bindTexture(gl.TEXTURE_2D, null);
-}
-
 export { width, height };
