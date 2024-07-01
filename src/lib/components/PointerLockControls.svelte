@@ -59,7 +59,7 @@
     "pointerlockerror",
     onPointerlockError,
   );
-  domElement.ownerDocument.addEventListener("keydown", onKeyDown);
+  // domElement.ownerDocument.addEventListener("keydown", onKeyDown);
   domElement.ownerDocument.addEventListener("mousedown", onMouseDown);
 
   onDestroy(() => {
@@ -72,7 +72,7 @@
       "pointerlockerror",
       onPointerlockError,
     );
-    domElement.ownerDocument.removeEventListener("keydown", onKeyDown);
+    // domElement.ownerDocument.removeEventListener("keydown", onKeyDown);
     domElement.ownerDocument.removeEventListener("mousedown", onMouseDown);
   });
 
@@ -115,21 +115,21 @@
     console.error("PointerLockControls: Unable to use Pointer Lock API");
   }
 
-  function onKeyDown(event: KeyboardEvent) {
-    event.preventDefault();
-    const mapping = keyMapping[get(selectedKeyboard)];
-    const paintKey = mapping.paint;
+  // function onKeyDown(event: KeyboardEvent) {
+  //   event.preventDefault();
+  //   const mapping = keyMapping[get(selectedKeyboard)];
+  //   const paintKey = mapping.paint;
 
-    if (event.key === paintKey) {
-      if (isLocked) {
-        unlock();
-        paintMode.set(true);
-        pointCameraToXAxis();
-      } else {
-        lock();
-      }
-    }
-  }
+  //   if (event.key === paintKey) {
+  //     if (isLocked) {
+  //       unlock();
+  //       paintMode.set(true);
+  //       pointCameraToXAxis();
+  //     } else {
+  //       lock();
+  //     }
+  //   }
+  // }
 
   function pointCameraToXAxis() {
     if (!$camera) return;
