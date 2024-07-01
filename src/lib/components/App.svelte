@@ -3,19 +3,24 @@
   import { Canvas } from "@threlte/core";
   import { World } from "@threlte/rapier";
   import Scene from "./Scene.svelte";
+  import * as Dialog from "$lib/components/ui/dialog";
+  import * as Select from "$lib/components/ui/select";
   import { selectedKeyboard } from "$lib/store/settings";
   import Ui from "./ui/paintMode/Ui.svelte";
   import { PerfMonitor } from "@threlte/extras";
   import Position from "./ui/position/position.svelte";
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
+  import { topologyInit } from "$lib/topology";
 
   let keyboard: any;
 
-  onMount(() => {
+  onMount(async () => {
     selectedKeyboard.subscribe((value) => {
       keyboard = { value };
     });
+
+    await topologyInit();
   });
 
   $: if (keyboard && keyboard.value) {
