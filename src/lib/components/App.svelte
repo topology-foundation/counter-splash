@@ -25,9 +25,9 @@
 </script>
 
 <div class="absolute">
-  <Ui />
   <SprayWheel />
 </div>
+<Ui />
 
 <div>
   <div class="absolute z-10 right-0 p-5 bg-white">
