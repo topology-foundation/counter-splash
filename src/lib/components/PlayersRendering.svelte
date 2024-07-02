@@ -18,7 +18,7 @@
         };
     }
   
-    function updatePlayerState(model: any, state: 'running' | 'walking' | 'jumping'): void {
+    function updatePlayerState(model: any, state: 'idle' | 'running' | 'walking' | 'jumping'): void {
         // Do more stuff
     }
   
@@ -45,11 +45,12 @@
     });
   
     onMount(async () => {
-        await initializePlayerData();
-        startP2PUpdates((id, x, y, z, rotationX, rotationY, rotationZ, state) => {
-            addOrUpdatePlayer(id, x, y, z, rotationX, rotationY, rotationZ, state);
-            updatePlayerArray();
-        }, 60); // 60Hz = 16.17
+        // //Sets up the mock data of the users
+        // await initializePlayerData();
+        // startP2PUpdates((id, x, y, z, rotationX, rotationY, rotationZ, state) => {
+        //     addOrUpdatePlayer(id, x, y, z, rotationX, rotationY, rotationZ, state);
+        //     updatePlayerArray();
+        // }, 60); // 60Hz = 16.17
     });
   
     onDestroy(() => {
