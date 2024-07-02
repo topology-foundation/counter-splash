@@ -44,3 +44,4 @@ export function setCanPaint(value: boolean) {
 }
 
 export const sprayWheel = writable(false);
+export const selectedSpray =writable<Number|null>(null);
