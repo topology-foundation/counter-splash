@@ -102,6 +102,8 @@
   </T.Group>
 </CollisionGroups>
 
+<PlayersRendering />
+
 <!--55 is top-->
 <CollisionGroups groups={[0]}>
   <Player position={[0, -3, 25]} />
