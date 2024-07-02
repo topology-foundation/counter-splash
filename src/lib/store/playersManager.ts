@@ -9,7 +9,7 @@ export function addOrUpdatePlayer(
   rotationX: number,
   rotationY: number,
   rotationZ: number,
-  state: 'running' | 'walking' | 'jumping'
+  state: 'idle' | 'running' | 'walking' | 'jumping'
 ): void {
   const player = players.get(id);
   if (player) {

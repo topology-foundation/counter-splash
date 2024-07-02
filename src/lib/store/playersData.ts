@@ -6,14 +6,14 @@ export interface Player {
   id: PlayerID;
   position: Vector3;
   rotation: Euler;
-  state: 'running' | 'walking' | 'jumping';
+  state: 'idle' | 'running' | 'walking' | 'jumping';
 }
 
 export class PlayerData implements Player {
   id: PlayerID;
   position: Vector3;
   rotation: Euler;
-  state: 'running' | 'walking' | 'jumping';
+  state: 'idle' | 'running' | 'walking' | 'jumping';
 
   constructor(
       id: PlayerID, 
@@ -23,7 +23,7 @@ export class PlayerData implements Player {
       rotationX: number, 
       rotationY: number, 
       rotationZ: number, 
-      state: 'running' | 'walking' | 'jumping'
+      state: 'idle' | 'running' | 'walking' | 'jumping'
     ){
     this.id = id;
     this.position = new Vector3(x, y, z);
@@ -39,7 +39,7 @@ export class PlayerData implements Player {
     this.rotation.set(rotationX, rotationY, rotationZ);
   }
 
-  updateState(state: 'running' | 'walking' | 'jumping') {
+  updateState(state: 'idle' | 'running' | 'walking' | 'jumping') {
     this.state = state;
   }
 }
