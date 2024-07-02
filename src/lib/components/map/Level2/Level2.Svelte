@@ -1,12 +1,5 @@
-
-
 <script>
-    import { Group } from "lucide-svelte";
-
-
+  import { Group } from "lucide-svelte";
 </script>
 
-
-<Group>
-    
-</Group>
+<Group></Group>
