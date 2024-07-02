@@ -28,24 +28,27 @@ export const handleCanvasMessages = (canvas: ICanvas, e: any) => {
 };
 
 function handleObjectUpdate(canvas: ICanvas, fn: string) {
-  // TODO `addSpray(${new Date().getTime()},[${offset}],[${sprayType}])`,
-  let args = fn.replace("paint(", "").replace(")", "").split(", ");
-  let offset_p = args[1]
-    .replace("[", "")
-    .replace("]", "")
-    .split(",")
-    .map((s) => parseInt(s, 10));
-  const offset: [number, number] = [offset_p[0], offset_p[1]];
-  let rgb_p = args[2]
-    .replace("[", "")
-    .replace("]", "")
-    .split(",")
-    .map((s) => parseInt(s, 10));
-  const rgb: [number, number, number] = [rgb_p[0], rgb_p[1], rgb_p[2]];
-
-  try {
-    // canvas.paint(args[0], offset, rgb);
-  } catch (e) {
-    console.error(e);
+  const fnName = fn.split("(")[0];
+  switch (fnName) {
+    case "addSpray": {
+      const args = fn.replace("addSpray(", "").replace(")", "").split(",");
+      let timestamp = parseInt(args[0], 10);
+      let offset_p = args[1]
+        .replace("[", "")
+        .replace("]", "")
+        .split(",")
+        .map((s) => parseInt(s, 10));
+      const offset: [number, number] = [offset_p[0], offset_p[1]];
+      let sprayType = parseInt(args[2], 10);
+      try {
+        canvas.addSpray(timestamp, offset, sprayType);
+      } catch (e) {
+        console.error(e);
+      }
+      break;
+    }
+    default: {
+      break;
+    }
   }
 }
