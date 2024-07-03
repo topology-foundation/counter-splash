@@ -3,20 +3,11 @@ import { Vector3, Euler } from "three";
 import { fromString as uint8ArrayFromString } from "uint8arrays/from-string";
 import { Canvas, type ICanvas } from "./objects/canvas";
 import { handleCanvasMessages, handlePresenceMessages } from "./handlers";
-
-export type PlayerID = string;
-
-// TODO import it from src/lib/store/playersData.ts
-export interface Player {
-  id: PlayerID;
-  position: Vector3;
-  rotation: Euler;
-  state: "running" | "walking" | "jumping";
-}
+import { Player } from "../store/playersData";
 
 // exception just for the EthCC demo, the format is not this at all
 export const OBJECT_ID = "topology::counter_splash";
-export const PRESENCE_GROUP = "/counter-splash/presence/0.0.1";
+export const PRESENCE_GROUP = "counter-splash::presence";
 export const WIDTH = 4000;
 export const HEIGHT = 3000;
 
@@ -65,7 +56,7 @@ export function addSpray(
 
 export function sendPresence(node: TopologyNode, player: Player) {
   node.sendGroupMessage(
-    "/counter-splash/presence/0.0.1",
+    PRESENCE_GROUP,
     uint8ArrayFromString(JSON.stringify(player)),
   );
 }

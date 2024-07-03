@@ -1,13 +1,14 @@
 import { toString as uint8ArrayToString } from "uint8arrays/to-string";
 import { type ICanvas } from "./objects/canvas";
-import { OBJECT_ID, PRESENCE_GROUP, Player } from ".";
+import { OBJECT_ID, PRESENCE_GROUP } from ".";
+import { Player } from "../store/playersData";
+import { addOrUpdatePlayer } from "../store/playersManager";
 
 export function handlePresenceMessages(e: any) {
   if (e.detail.msg.topic !== PRESENCE_GROUP) return;
   const input = uint8ArrayToString(e.detail.msg.data);
   const player: Player = JSON.parse(input);
-
-  // TODO process what to do with other players information
+  addOrUpdatePlayer(player);
 }
 
 // TODO: this should be superseded by wasm and main ts-topology library

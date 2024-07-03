@@ -16,19 +16,38 @@ export class PlayerData implements Player {
   state: "idle" | "running" | "walking" | "jumping";
 
   constructor(
-    id: PlayerID,
-    x: number,
-    y: number,
-    z: number,
-    rotationX: number,
-    rotationY: number,
-    rotationZ: number,
-    state: "idle" | "running" | "walking" | "jumping",
+    player?: Player,
+    id?: PlayerID,
+    x?: number,
+    y?: number,
+    z?: number,
+    rotationX?: number,
+    rotationY?: number,
+    rotationZ?: number,
+    state?: "idle" | "running" | "walking" | "jumping",
   ) {
+    if (player) {
+      this.id = player.id;
+      this.position = player.position;
+      this.rotation = player.rotation;
+      this.state = player.state;
+      return;
+    }
+    if (!id) throw new Error("neither player nor id were provided");
     this.id = id;
-    this.position = new Vector3(x, y, z);
-    this.rotation = new Euler(rotationX, rotationY, rotationZ);
-    this.state = state;
+
+    this.position = new Vector3(
+      x ?? randomCoordinate(),
+      y ?? randomCoordinate(),
+      z ?? randomCoordinate(),
+    );
+    this.rotation = new Euler(
+      rotationX ?? randomRotation(),
+      rotationY ?? randomRotation(),
+      rotationZ ?? randomRotation(),
+    );
+
+    this.state = state ?? "idle";
   }
 
   updatePosition(x: number, y: number, z: number) {
@@ -43,5 +62,8 @@ export class PlayerData implements Player {
     this.state = state;
   }
 }
+
+const randomCoordinate = () => Math.random() * 10 - 5;
+const randomRotation = () => Math.random() * Math.PI * 2;
 
 export const players: Map<PlayerID, PlayerData> = new Map();

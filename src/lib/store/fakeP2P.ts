@@ -13,7 +13,7 @@ export function initializePlayerData() {
     const state = ["idle", "running", "walking", "jumping"][
       Math.floor(Math.random() * 3)
     ] as "idle" | "running" | "walking" | "jumping";
-    addOrUpdatePlayer(id, x, y, z, rotationX, rotationY, rotationZ, state);
+    // addOrUpdatePlayer(id, x, y, z, rotationX, rotationY, rotationZ, state);
   }
 }
 
