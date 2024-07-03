@@ -4,7 +4,7 @@
 
 <div>
   Player Position:
-  <p>X: {Math.floor($playerPosition[0])}</p>
-  <p>Y: {Math.floor($playerPosition[1])}</p>
-  <p>Z: {Math.floor($playerPosition[2])}</p>
+  <p>X: {Math.floor($playerPosition.position.x)}</p>
+  <p>Y: {Math.floor($playerPosition.position.y)}</p>
+  <p>Z: {Math.floor($playerPosition.position.z)}</p>
 </div>
