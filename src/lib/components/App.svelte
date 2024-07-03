@@ -12,7 +12,7 @@
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
   import { topologyInit } from "$lib/topology";
-  import Update from "../topology/Update.svelte"
+  import Update from "../topology/Update.svelte";
 
   let keyboard: any;
 
@@ -20,7 +20,7 @@
     selectedKeyboard.subscribe((value) => {
       keyboard = { value };
     });
-    
+
     await topologyInit();
   });
 

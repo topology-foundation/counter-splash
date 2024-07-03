@@ -14,7 +14,9 @@
         return;
       }
       if (!coordinatesEqual(previousPosition.position, position.position)) {
-        if (hasSignificantMovement(previousPosition.position, position.position)) {
+        if (
+          hasSignificantMovement(previousPosition.position, position.position)
+        ) {
           onPlayerMove(position.position);
         }
       }
@@ -42,10 +44,10 @@
   }
 
   function onPlayerMove(newPosition: Vector3) {
-    console.log('Executing function due to player move.');
+    console.log("Executing function due to player move.");
   }
 
   function onCameraMove(newRotation: Euler) {
-    console.log('Executing function due to camera move.');
+    console.log("Executing function due to camera move.");
   }
 </script>
