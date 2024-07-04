@@ -51,7 +51,10 @@ export class PlayerData implements Player {
   }
 
   updatePosition(x: number, y: number, z: number) {
-    this.position.set(x, y, z);
+    // this.position.set(x, y, z);
+    this.position.x = x;
+    this.position.y = y;
+    this.position.z = z;
   }
 
   updateRotation(rotationX: number, rotationY: number, rotationZ: number) {

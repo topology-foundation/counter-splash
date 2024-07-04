@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import type { Player } from "./playersData";
+import type { Player } from "$lib/store/playersData";
 import { Vector3, Euler } from "three";
 
 // Player-related stores and functions

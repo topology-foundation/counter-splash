@@ -1,8 +1,8 @@
 import { toString as uint8ArrayToString } from "uint8arrays/to-string";
 import { type ICanvas } from "./objects/canvas";
 import { OBJECT_ID, PRESENCE_GROUP } from ".";
-import { Player } from "../store/playersData";
-import { addOrUpdatePlayer } from "../store/playersManager";
+import { type Player } from "$lib/store/playersData";
+import { addOrUpdatePlayer } from "$lib/store/playersManager";
 
 export function handlePresenceMessages(e: any) {
   if (e.detail.msg.topic !== PRESENCE_GROUP) return;

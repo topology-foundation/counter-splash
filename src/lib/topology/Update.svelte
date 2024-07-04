@@ -3,6 +3,7 @@
   import { playerPosition } from "$lib/store/player";
   import type { Player } from "$lib/store/playersData";
   import { Vector3, Euler } from "three";
+  import { sendPresence, nodeId } from "$lib/topology";
 
   let previousPosition: Player;
   const movementThreshold = 0.01;
@@ -13,6 +14,13 @@
         previousPosition = position;
         return;
       }
+      if (
+        !hasSignificantMovement(previousPosition.position, position.position) &&
+        rotationEqual(previousPosition.rotation, position.rotation)
+      )
+        return;
+
+      /*
       if (!coordinatesEqual(previousPosition.position, position.position)) {
         if (
           hasSignificantMovement(previousPosition.position, position.position)
@@ -23,6 +31,15 @@
       if (!rotationEqual(previousPosition.rotation, position.rotation)) {
         onCameraMove(position.rotation);
       }
+      */
+
+      if (nodeId) {
+        sendPresence({
+          ...position,
+          id: nodeId,
+        });
+      }
+
       previousPosition = position;
     });
     return () => {
