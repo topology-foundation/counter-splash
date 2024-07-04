@@ -20,20 +20,6 @@
       )
         return;
 
-      /*
-      if (!coordinatesEqual(previousPosition.position, position.position)) {
-        if (
-          hasSignificantMovement(previousPosition.position, position.position)
-        ) {
-          onPlayerMove(position.position);
-        }
-      }
-
-      if (!rotationEqual(previousPosition.rotation, position.rotation)) {
-        onCameraMove(position.rotation);
-      }
-      */
-
       if (nodeId) {
         sendPresence({
           ...position,

@@ -77,7 +77,6 @@
   });
 
   function onMouseMove(event: MouseEvent) {
-    event.preventDefault();
     if (!isLocked) return;
     if (!$camera) return;
 
@@ -98,8 +97,7 @@
     onChange();
   }
 
-  function onMouseDown(event: MouseEvent) {
-    event.preventDefault();
+  function onMouseDown() {
     if (!isLocked && !$paintMode) {
       lock();
     }

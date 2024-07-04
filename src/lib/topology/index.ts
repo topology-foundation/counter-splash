@@ -15,9 +15,6 @@ let node: TopologyNode;
 export let nodeId: string;
 
 export async function topologyInit() {
-  // maybe add it to browser storage and
-  // add the presence handler before going
-  // through the canvas loop
   node = new TopologyNode();
   await node.start();
   nodeId = node.getPeerId();

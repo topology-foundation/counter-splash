@@ -3,8 +3,6 @@
   import { Canvas } from "@threlte/core";
   import { World } from "@threlte/rapier";
   import Scene from "./Scene.svelte";
-  import * as Dialog from "$lib/components/ui/dialog";
-  import * as Select from "$lib/components/ui/select";
   import { selectedKeyboard } from "$lib/store/settings";
   import Ui from "./ui/paintMode/Ui.svelte";
   import { PerfMonitor } from "@threlte/extras";
