@@ -37,7 +37,7 @@
     "@threlte/extras": "^8.11.4",
     "@threlte/rapier": "^2.0.1",
     "@threlte/theatre": "^2.1.7",
-    "@topology-foundation/node": "^0.0.14",
+    "@topology-foundation/node": "^0.0.15",
     "@tweenjs/tween.js": "^23.1.2",
     "bits-ui": "^0.21.11",
     "clsx": "^2.1.1",
