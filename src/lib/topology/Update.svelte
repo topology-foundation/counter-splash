@@ -28,6 +28,7 @@
           onPlayerMove(position.position);
         }
       }
+
       if (!rotationEqual(previousPosition.rotation, position.rotation)) {
         onCameraMove(position.rotation);
       }
