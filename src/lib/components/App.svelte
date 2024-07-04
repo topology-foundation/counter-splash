@@ -12,6 +12,7 @@
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
   import { topologyInit } from "$lib/topology";
+  import Update from "../topology/Update.svelte";
 
   let keyboard: any;
 
@@ -31,6 +32,7 @@
 <div class="absolute">
   <Ui />
 </div>
+<Update />
 
 <div>
   <div class="absolute z-10 right-0 p-5 bg-white">

@@ -5,12 +5,13 @@
   import { PerspectiveCamera, Vector3, Raycaster } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
   import { paintMode } from "$lib/store/player";
-  import { setPlayerPosition } from "$lib/store/player";
+  import { setPlayerPosition, playerPosition } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
   import { createEventHandlers } from "./player/eventHandler";
+  import { get } from "svelte/store";
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let radius = 0.3;
@@ -50,7 +51,12 @@
     handleMovement(forward, backward, left, right, jump);
     handleGrounding();
     handleOutOfBounds();
-    setPlayerPosition(position);
+    const currentPlayerPosition = get(playerPosition);
+    setPlayerPosition(
+      new Vector3(...position),
+      cam.rotation.clone(),
+      currentPlayerPosition.state,
+    );
   });
 
   function handleMovement(
