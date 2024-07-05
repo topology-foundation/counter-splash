@@ -1,26 +1,15 @@
 import { players, PlayerData } from "./playersData";
-import type { PlayerID } from "./playersData";
+import type { Player, PlayerID } from "./playersData";
 
-export function addOrUpdatePlayer(
-  id: PlayerID,
-  x: number,
-  y: number,
-  z: number,
-  rotationX: number,
-  rotationY: number,
-  rotationZ: number,
-  state: "idle" | "running" | "walking" | "jumping",
-): void {
-  const player = players.get(id);
+export function addOrUpdatePlayer(input: Player): void {
+  const player = players.get(input.id);
+  console.log("addOrUpdatePlayer", input, player);
   if (player) {
-    player.updatePosition(x, y, z);
-    player.updateRotation(rotationX, rotationY, rotationZ);
-    player.updateState(state);
+    player.updatePosition(input.position.x, input.position.y, input.position.z);
+    player.updateRotation(input.rotation.x, input.rotation.y, input.rotation.z);
+    player.updateState(input.state);
   } else {
-    players.set(
-      id,
-      new PlayerData(id, x, y, z, rotationX, rotationY, rotationZ, state),
-    );
+    players.set(input.id, new PlayerData(input));
   }
 }
 

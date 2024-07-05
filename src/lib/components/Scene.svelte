@@ -5,6 +5,7 @@
   import { spring } from "svelte/motion";
   import { Mesh, Vector3 } from "three";
   import Player from "./Player.svelte";
+  import PlayersRendering from "./PlayersRendering.svelte";
   import SplashWall from "./map/SplashWall.svelte";
   import ObstacleObjects from "./map/ObstacleObjects.svelte";
   import GenericPlaform from "./map/GenericPlatform.svelte";
@@ -44,8 +45,6 @@
     isIntersect.set(false);
   }
 </script>
-
-<Environment path="/hdr/" files="shanghai_riverside_1k.hdr" />
 
 <T.AmbientLight intensity={0.6} />
 

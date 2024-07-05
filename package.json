@@ -3,12 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "vite dev",
     "build": "vite build",
-    "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "format": "prettier --write ."
+    "dev": "vite dev",
+    "format": "prettier --write .",
+    "prepare": "svelte-kit sync",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.0.0",
@@ -36,6 +37,7 @@
     "@threlte/extras": "^8.11.4",
     "@threlte/rapier": "^2.0.1",
     "@threlte/theatre": "^2.1.7",
+    "@topology-foundation/node": "^0.0.15",
     "@tweenjs/tween.js": "^23.1.2",
     "bits-ui": "^0.21.11",
     "clsx": "^2.1.1",

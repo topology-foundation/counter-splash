@@ -9,13 +9,17 @@
   import Position from "./ui/position/position.svelte";
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
+  import { topologyInit } from "$lib/topology";
+  import Update from "../topology/Update.svelte";
 
   let keyboard: any;
 
-  onMount(() => {
+  onMount(async () => {
     selectedKeyboard.subscribe((value) => {
       keyboard = { value };
     });
+
+    await topologyInit();
   });
 
   $: if (keyboard && keyboard.value) {
@@ -26,6 +30,7 @@
 <div class="absolute">
   <Ui />
 </div>
+<Update />
 
 <div>
   <div class="absolute z-10 right-0 p-5 bg-white">
