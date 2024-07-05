@@ -99,8 +99,16 @@
       cam.rotation.set(0, 0, 0);
     }
   }
+  let lastSprayTime = 0;
 
   function handleCursor() {
+    const now = Date.now();
+    if (now - lastSprayTime < 3000) {
+      if (dot.material instanceof MeshBasicMaterial) {
+        dot.material.color.set(0xffffff); 
+      }
+      return; 
+    }    
     raycaster.setFromCamera(new Vector2(0, 0), cam);    
     const wallIntersects = raycaster.intersectObjects(scene.children, true);
     const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
@@ -115,6 +123,12 @@
   }
   
   function handleSpray() {
+    const now = Date.now();
+    if (now - lastSprayTime < 3000) {
+      return; 
+    }
+    lastSprayTime = now; 
+
     raycaster.setFromCamera(new Vector2(0, 0), cam);    
     const wallIntersects = raycaster.intersectObjects(scene.children, true);
     const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
@@ -124,22 +138,13 @@
 
       if (distance <= maxSprayDistance) {
         const uv = intersectsWithSplashWall.uv;
-        console.log(intersectsWithSplashWall)
-        if (isMouseDown && uv) {
+        if (uv) {
           const sprayData = {id: $selectedSpray, offset: { x: uv.x * width, y: uv.y * height }, timestamp: Math.floor(Date.now() / 1000) };
           addSprayData(sprayData);
         }
       }
     }
   }
-
-  function onMouseDown() {
-      isMouseDown = 1;
-      handleSpray();
-    }
-    function onMouseUp() {
-      isMouseDown = 0;
-    }
 
   // // Paint mode handler
   // $: {
@@ -153,7 +158,7 @@
   // }
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} on:mousedown={onMouseDown} on:mouseup={onMouseUp}/>
+<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} on:click={handleSpray}/>
 
 <T.Group position.y={0.9}>
   <T.PerspectiveCamera

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { Canvas } from "@threlte/core";
   import { World } from "@threlte/rapier";
   import Scene from "./Scene.svelte";
@@ -10,13 +10,20 @@
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
   import SprayWheel from "./ui/sprayWheel.svelte";
+  import { startSpraySubscription } from '../paint';
 
   let keyboard: any;
+  let unsubscribe: () => void;
 
   onMount(() => {
+    unsubscribe = startSpraySubscription();
     selectedKeyboard.subscribe((value) => {
       keyboard = { value };
     });
+  });
+
+  onDestroy(() => {
+    if (unsubscribe) unsubscribe();
   });
 
   $: if (keyboard && keyboard.value) {
