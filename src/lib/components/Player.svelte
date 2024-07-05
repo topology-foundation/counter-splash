@@ -126,7 +126,7 @@
         const uv = intersectsWithSplashWall.uv;
         console.log(intersectsWithSplashWall)
         if (isMouseDown && uv) {
-          const sprayData = {id: $selectedSpray ,offset: { x: uv.x * width, y: uv.y * height }, timestamp: Math.floor(Date.now() / 1000) };
+          const sprayData = {id: $selectedSpray, offset: { x: uv.x * width, y: uv.y * height }, timestamp: Math.floor(Date.now() / 1000) };
           addSprayData(sprayData);
         }
       }
