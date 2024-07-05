@@ -84,8 +84,8 @@ export function sprayCanvas(imageUrl: string, offsetX: number, offsetY: number) 
 
       if (a === 0) continue; // Skip transparent pixels
 
-      const x = offsetX + (i / 4) % canvas.width;
-      const y = offsetY + canvas.height - Math.floor(i / 4 / canvas.width);
+      const x = offsetX - IMAGE_SIZE / 2 + (i / 4) % canvas.width;
+      const y = offsetY - IMAGE_SIZE / 2 + canvas.height - Math.floor(i / 4 / canvas.width);
 
       // Ensure coordinates are within bounds
       if (x >= 0 && x < width && y >= 0 && y < height) {
