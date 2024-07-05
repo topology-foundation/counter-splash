@@ -18,7 +18,8 @@
     playerPosition,
     addSprayData,
     selectedSpray,
-  } from "$lib/store/player";  import { tweened } from "svelte/motion";
+  } from "$lib/store/player";
+  import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
