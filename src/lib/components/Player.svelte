@@ -2,7 +2,7 @@
   import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
   import { T, useTask, useThrelte } from "@threlte/core";
   import { RigidBody, CollisionGroups, Collider } from "@threlte/rapier";
-  import { PerspectiveCamera, Vector3, Raycaster } from "three";
+  import { PerspectiveCamera, Vector3, Vector2, Raycaster, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
   import { paintMode } from "$lib/store/player";
   import { setPlayerPosition } from "$lib/store/player";
@@ -11,8 +11,11 @@
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
   import { createEventHandlers } from "./player/eventHandler";
+  import { updatePixels } from '$lib/store/wall';
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
+  let isMouseDown = 0;
+  let maxSprayDistance = 20;
   let radius = 0.3;
   let height = 1.7;
   export let speed = 6;
@@ -21,6 +24,8 @@
   let rigidBody: RapierRigidBody;
   let lock: () => void;
   let cam: PerspectiveCamera;
+
+  let dot: Mesh;
 
   const t = new Vector3();
   const { scene } = useThrelte();
@@ -33,6 +38,11 @@
   let intervalId: any;
 
   onMount(() => {
+    const dotGeometry = new CircleGeometry(0.01, 32);
+    const dotMaterial = new MeshBasicMaterial({ color: 0xffffff });
+    dot = new Mesh(dotGeometry, dotMaterial);
+    dot.position.set(0, 0, -0.5);
+    cam.add(dot);
     intervalId = setInterval(handlePainting, 16);
     return () => clearInterval(intervalId);
   });
@@ -51,6 +61,7 @@
     handleGrounding();
     handleOutOfBounds();
     setPlayerPosition(position);
+    handleCursor();
   });
 
   function handleMovement(
@@ -89,6 +100,45 @@
     }
   }
 
+  function handleCursor() {
+    raycaster.setFromCamera(new Vector2(0, 0), cam);    
+    const wallIntersects = raycaster.intersectObjects(scene.children, true);
+    const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
+    if (intersectsWithSplashWall && dot.material instanceof MeshBasicMaterial) {
+      const distance = intersectsWithSplashWall.distance;
+      if (distance <= maxSprayDistance) {
+        dot.material.color.set(0xff0000);
+      } else {
+        dot.material.color.set(0xffffff);
+      }
+    }
+  }
+  
+  function handleSpray() {
+    raycaster.setFromCamera(new Vector2(0, 0), cam);    
+    const wallIntersects = raycaster.intersectObjects(scene.children, true);
+    const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
+
+    if (intersectsWithSplashWall && dot.material instanceof MeshBasicMaterial) {
+      const distance = intersectsWithSplashWall.distance;
+
+      if (distance <= maxSprayDistance) {
+        const uv = intersectsWithSplashWall.uv;
+        if (isMouseDown && uv) {
+          console.log(`spray:${uv.x},${uv.y}`);
+        }
+      }
+    }
+  }
+
+  function onMouseDown() {
+      isMouseDown = 1;
+      handleSpray();
+    }
+    function onMouseUp() {
+      isMouseDown = 0;
+    }
+
   // // Paint mode handler
   // $: {
   //   if ($paintMode && cam) {
@@ -101,7 +151,7 @@
   // }
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} />
+<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} on:mousedown={onMouseDown} on:mouseup={onMouseUp}/>
 
 <T.Group position.y={0.9}>
   <T.PerspectiveCamera
