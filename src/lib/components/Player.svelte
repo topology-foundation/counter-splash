@@ -5,7 +5,7 @@
   import { PerspectiveCamera, Vector3, Vector2, Raycaster, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
   import { paintMode } from "$lib/store/player";
-  import { setPlayerPosition } from "$lib/store/player";
+  import { setPlayerPosition, addSprayData, selectedSpray } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import { onMount } from "svelte";
@@ -125,7 +125,8 @@
       if (distance <= maxSprayDistance) {
         const uv = intersectsWithSplashWall.uv;
         if (isMouseDown && uv) {
-          console.log(`spray:${uv.x},${uv.y}`);
+          const sprayData = {id: $selectedSpray ,uv: { x: uv.x, y: uv.y }, timestamp: Math.floor(Date.now() / 1000) };
+          addSprayData(sprayData);
         }
       }
     }
