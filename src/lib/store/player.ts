@@ -49,7 +49,7 @@ export const selectedSpray = writable<number>(0);
 
 export type SprayData = {
   id: number,
-  uv: { x: number, y: number },
+  offset: { x: number, y: number },
   timestamp: number
 };
 const initialSprayData: SprayData[] = [];

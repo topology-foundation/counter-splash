@@ -11,15 +11,15 @@
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
   import { createEventHandlers } from "./player/eventHandler";
-  import { updatePixels } from '$lib/store/wall';
+  import { width, height } from '$lib/store/wall';
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
   let isMouseDown = 0;
   let maxSprayDistance = 20;
   let radius = 0.3;
-  let height = 1.7;
+  let h = 1.7;
   export let speed = 6;
-  let jumpForce = 10;
+  let jumpForce = 15;
 
   let rigidBody: RapierRigidBody;
   let lock: () => void;
@@ -89,7 +89,7 @@
     raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
     const intersects = raycaster.intersectObject(scene, true);
     touchingGround =
-      intersects.length > 0 && intersects[0].distance < height / 2 + 0.5;
+      intersects.length > 0 && intersects[0].distance < h / 2 + 0.5;
   }
 
   function handleOutOfBounds() {
@@ -124,8 +124,9 @@
 
       if (distance <= maxSprayDistance) {
         const uv = intersectsWithSplashWall.uv;
+        console.log(intersectsWithSplashWall)
         if (isMouseDown && uv) {
-          const sprayData = {id: $selectedSpray ,uv: { x: uv.x, y: uv.y }, timestamp: Math.floor(Date.now() / 1000) };
+          const sprayData = {id: $selectedSpray ,offset: { x: uv.x * width, y: uv.y * height }, timestamp: Math.floor(Date.now() / 1000) };
           addSprayData(sprayData);
         }
       }
@@ -179,14 +180,14 @@
     <CollisionGroups groups={[0]}>
       <Collider
         shape={"capsule"}
-        args={[height / 2 - radius, radius]}
+        args={[h / 2 - radius, radius]}
         friction={0}
         restitution={0}
       />
     </CollisionGroups>
 
     <CollisionGroups groups={[15]}>
-      <T.Group position={[0, -height / 2 + radius, 0]}>
+      <T.Group position={[0, -h / 2 + radius, 0]}>
         <Collider sensor shape={"ball"} args={[radius * 1.2]} restitution={0} />
       </T.Group>
     </CollisionGroups>
