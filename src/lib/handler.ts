@@ -13,6 +13,11 @@ export function initPixelToImage(imageUrl: string) {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
+    if (!ctx) {
+      console.error('Failed to get 2D context');
+      return;
+    }
+
     // Set the canvas dimensions to match the image
     canvas.width = image.width;
     canvas.height = image.height;
@@ -56,6 +61,11 @@ export function sprayCanvas(imageUrl: string, offsetX: number, offsetY: number) 
   image.onload = () => {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      console.error('Failed to get 2D context');
+      return;
+    }
 
     canvas.width = IMAGE_SIZE;
     canvas.height = IMAGE_SIZE;
