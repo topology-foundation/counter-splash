@@ -14,7 +14,7 @@ export function initPixelToImage(imageUrl: string) {
     const ctx = canvas.getContext("2d");
 
     if (!ctx) {
-      console.error('Failed to get 2D context');
+      console.error("Failed to get 2D context");
       return;
     }
 
@@ -51,8 +51,11 @@ export function initPixelToImage(imageUrl: string) {
   };
 }
 
-
-export function sprayCanvas(imageUrl: string, offsetX: number, offsetY: number) {
+export function sprayCanvas(
+  imageUrl: string,
+  offsetX: number,
+  offsetY: number,
+) {
   const IMAGE_SIZE = 256;
   const image = new Image();
 
@@ -63,7 +66,7 @@ export function sprayCanvas(imageUrl: string, offsetX: number, offsetY: number) 
     const ctx = canvas.getContext("2d");
 
     if (!ctx) {
-      console.error('Failed to get 2D context');
+      console.error("Failed to get 2D context");
       return;
     }
 
@@ -84,8 +87,12 @@ export function sprayCanvas(imageUrl: string, offsetX: number, offsetY: number) 
 
       if (a === 0) continue; // Skip transparent pixels
 
-      const x = offsetX - IMAGE_SIZE / 2 + (i / 4) % canvas.width;
-      const y = offsetY - IMAGE_SIZE / 2 + canvas.height - Math.floor(i / 4 / canvas.width);
+      const x = offsetX - IMAGE_SIZE / 2 + ((i / 4) % canvas.width);
+      const y =
+        offsetY -
+        IMAGE_SIZE / 2 +
+        canvas.height -
+        Math.floor(i / 4 / canvas.width);
 
       // Ensure coordinates are within bounds
       if (x >= 0 && x < width && y >= 0 && y < height) {

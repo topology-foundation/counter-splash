@@ -10,7 +10,7 @@
   import { debugMode } from "$lib/store/player";
   import Settings from "./ui/settings.svelte";
   import SprayWheel from "./ui/sprayWheel.svelte";
-  import { startSpraySubscription } from '../paint';
+  import { startSpraySubscription } from "../paint";
 
   let keyboard: any;
   let unsubscribe: () => void;

@@ -2,24 +2,34 @@
   import type { RigidBody as RapierRigidBody } from "@dimforge/rapier3d-compat";
   import { T, useTask, useThrelte } from "@threlte/core";
   import { RigidBody, CollisionGroups, Collider } from "@threlte/rapier";
-  import { PerspectiveCamera, Vector3, Vector2, Raycaster, CircleGeometry, MeshBasicMaterial, Mesh } from "three";
+  import {
+    PerspectiveCamera,
+    Vector3,
+    Vector2,
+    Raycaster,
+    CircleGeometry,
+    MeshBasicMaterial,
+    Mesh,
+  } from "three";
   import PointerLockControls from "./PointerLockControls.svelte";
-  import { paintMode } from "$lib/store/player";
-  import { setPlayerPosition, addSprayData, selectedSpray } from "$lib/store/player";
+  import {
+    setPlayerPosition,
+    addSprayData,
+    selectedSpray,
+  } from "$lib/store/player";
   import { tweened } from "svelte/motion";
   import { cubicOut } from "svelte/easing";
   import { onMount } from "svelte";
   import { handlePainting } from "./player/paintLogic";
   import { createEventHandlers } from "./player/eventHandler";
-  import { width, height } from '$lib/store/wall';
+  import { width, height } from "$lib/store/wall";
 
   export let position: [x: number, y: number, z: number] = [0, 0, 0];
-  let isMouseDown = 0;
   let maxSprayDistance = 20;
   let radius = 0.3;
   let h = 1.7;
   export let speed = 6;
-  let jumpForce = 15;
+  let jumpForce = 10;
 
   let rigidBody: RapierRigidBody;
   let lock: () => void;
@@ -105,13 +115,15 @@
     const now = Date.now();
     if (now - lastSprayTime < 3000) {
       if (dot.material instanceof MeshBasicMaterial) {
-        dot.material.color.set(0xffffff); 
+        dot.material.color.set(0xffffff);
       }
-      return; 
-    }    
-    raycaster.setFromCamera(new Vector2(0, 0), cam);    
+      return;
+    }
+    raycaster.setFromCamera(new Vector2(0, 0), cam);
     const wallIntersects = raycaster.intersectObjects(scene.children, true);
-    const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
+    const intersectsWithSplashWall = wallIntersects.find(
+      (intersect) => intersect.object.name === "SplashWall",
+    );
     if (intersectsWithSplashWall && dot.material instanceof MeshBasicMaterial) {
       const distance = intersectsWithSplashWall.distance;
       if (distance <= maxSprayDistance) {
@@ -121,17 +133,19 @@
       }
     }
   }
-  
+
   function handleSpray() {
     const now = Date.now();
     if (now - lastSprayTime < 3000) {
-      return; 
+      return;
     }
-    lastSprayTime = now; 
+    lastSprayTime = now;
 
-    raycaster.setFromCamera(new Vector2(0, 0), cam);    
+    raycaster.setFromCamera(new Vector2(0, 0), cam);
     const wallIntersects = raycaster.intersectObjects(scene.children, true);
-    const intersectsWithSplashWall = wallIntersects.find(intersect => intersect.object.name === "SplashWall");
+    const intersectsWithSplashWall = wallIntersects.find(
+      (intersect) => intersect.object.name === "SplashWall",
+    );
 
     if (intersectsWithSplashWall && dot.material instanceof MeshBasicMaterial) {
       const distance = intersectsWithSplashWall.distance;
@@ -139,7 +153,11 @@
       if (distance <= maxSprayDistance) {
         const uv = intersectsWithSplashWall.uv;
         if (uv) {
-          const sprayData = {id: $selectedSpray, offset: { x: uv.x * width, y: uv.y * height }, timestamp: Math.floor(Date.now() / 1000) };
+          const sprayData = {
+            id: $selectedSpray,
+            offset: { x: uv.x * width, y: uv.y * height },
+            timestamp: Math.floor(Date.now() / 1000),
+          };
           addSprayData(sprayData);
         }
       }
@@ -158,7 +176,11 @@
   // }
 </script>
 
-<svelte:window on:keydown|preventDefault={onKeyDown} on:keyup={onKeyUp} on:click={handleSpray}/>
+<svelte:window
+  on:keydown|preventDefault={onKeyDown}
+  on:keyup={onKeyUp}
+  on:click={handleSpray}
+/>
 
 <T.Group position.y={0.9}>
   <T.PerspectiveCamera

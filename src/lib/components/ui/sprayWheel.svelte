@@ -16,12 +16,12 @@
 
 <div class="relative h-screen w-full z-30">
   <div class="p-3">
-      <img
-        src={getImageSrc(spray)}
-        alt="spray selected"
-        width="100"
-        height="100"
-      />
+    <img
+      src={getImageSrc(spray)}
+      alt="spray selected"
+      width="100"
+      height="100"
+    />
   </div>
   {#if $sprayWheel}
     <div

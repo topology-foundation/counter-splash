@@ -1,6 +1,6 @@
-import { sprayCanvas } from './handler';
-import { sprayStore } from '$lib/store/player';
-import type { SprayData } from '$lib/store/player';
+import { sprayCanvas } from "./handler";
+import { sprayStore } from "$lib/store/player";
+import type { SprayData } from "$lib/store/player";
 
 // ugly but i don't care
 function generateSprayKey(spray: SprayData): string {
@@ -11,7 +11,7 @@ const paintedSprays = new Set<string>();
 
 export function startSpraySubscription() {
   return sprayStore.subscribe((sprays: SprayData[]) => {
-    sprays.forEach(spray => {
+    sprays.forEach((spray) => {
       const sprayKey = generateSprayKey(spray);
       if (!paintedSprays.has(sprayKey)) {
         const { id, offset } = spray;

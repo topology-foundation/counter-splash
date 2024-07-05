@@ -46,16 +46,15 @@ export function setCanPaint(value: boolean) {
 export const sprayWheel = writable(false);
 export const selectedSpray = writable<number>(0);
 
-
 export type SprayData = {
-  id: number,
-  offset: { x: number, y: number },
-  timestamp: number
+  id: number;
+  offset: { x: number; y: number };
+  timestamp: number;
 };
 const initialSprayData: SprayData[] = [];
 export const sprayStore = writable<SprayData[]>(initialSprayData);
 export const addSprayData = (spray: SprayData) => {
-  sprayStore.update(sprays => {
+  sprayStore.update((sprays) => {
     const updatedSprays = [...sprays, spray];
     updatedSprays.sort((a, b) => a.timestamp - b.timestamp);
     return updatedSprays;
