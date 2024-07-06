@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { paintMode, palette, selectedColor } from "$lib/store/player";
-  import type { Color } from "$lib/store/player";
-  import { fly } from "svelte/transition";
-  import { get } from "svelte/store";
+  // import { paintMode, palette, selectedColor } from "$lib/store/player";
+  // import type { Color } from "$lib/store/player";
+  // import { fly } from "svelte/transition";
+  // import { get } from "svelte/store";
 
-  let colors: Color[] = get(palette);
-  let selected: Color = get(selectedColor);
+  // let colors: Color[] = get(palette);
+  // let selected: Color = get(selectedColor);
 
-  function selectColor(color: Color): void {
-    selectedColor.set(color);
-    selected = color; // Update the local selected color
-  }
+  // function selectColor(color: Color): void {
+  //   selectedColor.set(color);
+  //   selected = color; // Update the local selected color
+  // }
 
-  // Update colors and selected color when stores change
-  $: colors = $palette;
-  $: selected = $selectedColor;
+  // // Update colors and selected color when stores change
+  // $: colors = $palette;
+  // $: selected = $selectedColor;
 </script>
 
-{#if $paintMode}
+<!-- {#if $paintMode}
   <div
     transition:fly={{ x: -100, duration: 500 }}
     class="fixed z-50 left-0 top-1/2 transform -translate-y-1/2 h-[50vh] w-[100px] bg-white flex items-center justify-center p-2"
@@ -42,4 +42,4 @@
       {/each}
     </div>
   </div>
-{/if}
+{/if} -->

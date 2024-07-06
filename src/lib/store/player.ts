@@ -76,3 +76,20 @@ export const palette = writable<Color[]>([
   { r: 255, g: 165, b: 0, a: 255 }, // Orange
   { r: 75, g: 0, b: 130, a: 255 }, // Indigo
 ]);
+export const sprayWheel = writable(false);
+export const selectedSpray = writable<number>(0);
+
+export type SprayData = {
+  id: number;
+  offset: { x: number; y: number };
+  timestamp: number;
+};
+const initialSprayData: SprayData[] = [];
+export const sprayStore = writable<SprayData[]>(initialSprayData);
+export const addSprayData = (spray: SprayData) => {
+  sprayStore.update((sprays) => {
+    const updatedSprays = [...sprays, spray];
+    updatedSprays.sort((a, b) => a.timestamp - b.timestamp);
+    return updatedSprays;
+  });
+};

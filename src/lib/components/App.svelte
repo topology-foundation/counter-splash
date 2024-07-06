@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { Canvas } from "@threlte/core";
   import { World } from "@threlte/rapier";
   import Scene from "./Scene.svelte";
@@ -11,14 +11,17 @@
   import Settings from "./ui/settings.svelte";
   import { topologyInit } from "$lib/topology";
   import Update from "../topology/Update.svelte";
+  import SprayWheel from "./ui/sprayWheel.svelte";
+  import { startSpraySubscription } from "../paint";
 
   let keyboard: any;
+  let unsubscribe: () => void;
 
   onMount(async () => {
+    unsubscribe = startSpraySubscription();
     selectedKeyboard.subscribe((value) => {
       keyboard = { value };
     });
-
     await topologyInit();
   });
 
@@ -28,7 +31,7 @@
 </script>
 
 <div class="absolute">
-  <Ui />
+  <SprayWheel />
 </div>
 <Update />
 
