@@ -3,6 +3,7 @@ import { fromString as uint8ArrayFromString } from "uint8arrays/from-string";
 import { Canvas, type ICanvas } from "./objects/canvas";
 import { handleCanvasMessages, handlePresenceMessages } from "./handlers";
 import { type Player } from "../store/playersData";
+import { addSprayData, type SprayData } from "$lib/store/player";
 
 // exception just for the EthCC demo, the format is not this at all
 export const OBJECT_ID = "topology::counter_splash";
@@ -23,23 +24,36 @@ export async function topologyInit() {
   canvas = new Canvas(node.getPeerId(), WIDTH, HEIGHT);
   canvas.id = OBJECT_ID;
   node.createObject(canvas);
-  // await node.subscribeObject(OBJECT_ID);
   node.addCustomGroupMessageHandler((e) => handleCanvasMessages(canvas, e));
 
   node.addCustomGroup(PRESENCE_GROUP);
   node.addCustomGroupMessageHandler((e) => handlePresenceMessages(e));
 
-  // TODO check best way to handle this
-  // and when to do full/partial merges (+ policy)
-
-  /*
-  let extCanvas = getObject(OBJECT_ID);
-  while (extCanvas === null) {
-    extCanvas = getObject(OBJECT_ID);
+  while (true) {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 15000));
+      node.syncObject(OBJECT_ID);
+      let object: ICanvas | null = getObject(OBJECT_ID);
+      if (!object) continue;
+      canvas = object;
+      // TODO fix this, might be adding on top of existing sprays
+      for (let spray of canvas.getSprays().set()) {
+        const tokens = spray.split(",");
+        const sprayData: SprayData = {
+          id: parseInt(tokens[3].replace("]", ""), 10),
+          offset: {
+            x: parseInt(tokens[1].replace("[", ""), 10),
+            y: parseInt(tokens[2].replace("]", ""), 10),
+          },
+          timestamp: parseInt(tokens[0].replace("[", ""), 10),
+        };
+        addSprayData(sprayData);
+      }
+    } catch (e) {
+      console.error(e);
+      break;
+    }
   }
-
-  canvas = extCanvas;
-  */
 }
 
 export function getObject(id: string): ICanvas | null {
