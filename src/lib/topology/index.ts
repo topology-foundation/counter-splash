@@ -12,6 +12,7 @@ export const WIDTH = 4000;
 export const HEIGHT = 3000;
 
 let node: TopologyNode;
+let canvas: Canvas;
 export let nodeId: string;
 
 export async function topologyInit() {
@@ -19,9 +20,14 @@ export async function topologyInit() {
   await node.start();
   nodeId = node.getPeerId();
 
+  // TODO await for peer connection
   /*
-  await node.subscribeObject(OBJECT_ID);
-  let canvas = new Canvas(node.getPeerId(), WIDTH, HEIGHT);
+  canvas = new Canvas(node.getPeerId(), WIDTH, HEIGHT);
+  await node.subscribeObject(
+    OBJECT_ID,
+    true,
+    "12D3KooWRbqQEobhmbqdPcFmwEemD1PiAkhwcdoqmjPCHRu6xehm",
+  );
   node.addCustomGroupMessageHandler((e) => handleCanvasMessages(canvas, e));
   */
 
@@ -30,13 +36,14 @@ export async function topologyInit() {
 
   // TODO check best way to handle this
   // and when to do full/partial merges (+ policy)
+
   /*
   let extCanvas = getObject(OBJECT_ID);
   while (extCanvas === null) {
     extCanvas = getObject(OBJECT_ID);
   }
 
-  canvas.merge(extCanvas);
+  canvas = extCanvas;
   */
 }
 
@@ -47,14 +54,21 @@ export function getObject(id: string): ICanvas | null {
 }
 
 export function addSpray(
-  canvas: ICanvas,
+  timestamp: number,
   offset: [number, number],
   sprayType: number,
 ) {
-  canvas.addSpray(new Date().getTime(), offset, sprayType);
+  if (
+    canvas
+      .getSprays()
+      .lookup(`[${timestamp},[${offset[0]},${offset[1]}],${sprayType}]`)
+  )
+    return;
+  console.log(getObject(OBJECT_ID));
+  canvas.addSpray(timestamp, offset, sprayType);
   node.updateObject(
     canvas,
-    `addSpray(${new Date().getTime()},[${offset}],[${sprayType}])`,
+    `addSpray(${timestamp},[${offset}],[${sprayType}])`,
   );
 }
 

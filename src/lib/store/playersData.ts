@@ -58,7 +58,10 @@ export class PlayerData implements Player {
   }
 
   updateRotation(rotationX: number, rotationY: number, rotationZ: number) {
-    this.rotation.set(rotationX, rotationY, rotationZ);
+    // this.rotation.set(rotationX, rotationY, rotationZ);
+    this.rotation.x = rotationX;
+    this.rotation.y = rotationY;
+    this.rotation.z = rotationZ;
   }
 
   updateState(state: "idle" | "running" | "walking" | "jumping") {
