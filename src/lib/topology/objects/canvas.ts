@@ -51,6 +51,17 @@ export class Canvas extends TopologyObject implements ICanvas {
   }
 
   merge(peerCanvas: Canvas): void {
+    // TODO ugly, fix this
+    // protobufs should solve this
+    peerCanvas = Object.assign(new Canvas("", 0, 0), peerCanvas);
+    peerCanvas.sprays = Object.assign(
+      new GSet<String>(new Set()),
+      peerCanvas.sprays,
+    );
+    peerCanvas.sprays._set = Object.assign(
+      new Set<String>(),
+      peerCanvas.sprays._set,
+    );
     this.sprays.merge(peerCanvas.getSprays());
   }
 }

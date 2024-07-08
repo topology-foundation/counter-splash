@@ -1,9 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { playerPosition } from "$lib/store/player";
+  import {
+    playerPosition,
+    sprayStore,
+    type SprayData,
+  } from "$lib/store/player";
   import type { Player } from "$lib/store/playersData";
   import { Vector3, Euler } from "three";
-  import { sendPresence, nodeId } from "$lib/topology";
+  import { addSpray, sendPresence, nodeId } from "$lib/topology";
 
   let previousPosition: Player;
   const movementThreshold = 0.01;
@@ -29,8 +33,16 @@
 
       previousPosition = position;
     });
+
+    const unsubscribeCanvas = sprayStore.subscribe((sprays: SprayData[]) => {
+      sprays.forEach((spray) => {
+        addSpray(spray.timestamp, [spray.offset.x, spray.offset.y], spray.id);
+      });
+    });
+
     return () => {
       unsubscribe();
+      unsubscribeCanvas();
     };
   });
 

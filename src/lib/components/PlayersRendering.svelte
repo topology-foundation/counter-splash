@@ -7,6 +7,7 @@
   import { initializePlayerData, startP2PUpdates } from "$lib/store/fakeP2P";
   import { Vector3, Euler } from "three";
   import Player from "./Player.svelte";
+  import { nodeId } from "$lib/topology";
 
   let playerModels: Map<PlayerID, any> = new Map();
   let playerArray: PlayerData[] = [];
@@ -59,6 +60,15 @@
   onDestroy(() => {
     players.clear();
   });
+
+  function stringToColor(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let c = (hash & 0x00ffffff).toString(16).toUpperCase();
+    return parseInt("0x" + "00000".substring(0, 6 - c.length) + c);
+  }
 </script>
 
 {#if playerArray}
@@ -68,7 +78,7 @@
     >
       <T.Mesh>
         <T.SphereGeometry args={[0.5, 32, 32]} position={[0, 1, 0]} />
-        <T.MeshBasicMaterial color={0x00ff00} />
+        <T.MeshBasicMaterial color={stringToColor(nodeId)} />
       </T.Mesh>
     </T.Group>
   {/each}
