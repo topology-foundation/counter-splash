@@ -1,5 +1,4 @@
 import { TopologyNode } from "@topology-foundation/node";
-import { Vector3, Euler } from "three";
 import { fromString as uint8ArrayFromString } from "uint8arrays/from-string";
 import { Canvas, type ICanvas } from "./objects/canvas";
 import { handleCanvasMessages, handlePresenceMessages } from "./handlers";
@@ -21,15 +20,11 @@ export async function topologyInit() {
   nodeId = node.getPeerId();
 
   // TODO await for peer connection
-  /*
   canvas = new Canvas(node.getPeerId(), WIDTH, HEIGHT);
-  await node.subscribeObject(
-    OBJECT_ID,
-    true,
-    "12D3KooWRbqQEobhmbqdPcFmwEemD1PiAkhwcdoqmjPCHRu6xehm",
-  );
+  canvas.id = OBJECT_ID;
+  node.createObject(canvas);
+  // await node.subscribeObject(OBJECT_ID);
   node.addCustomGroupMessageHandler((e) => handleCanvasMessages(canvas, e));
-  */
 
   node.addCustomGroup(PRESENCE_GROUP);
   node.addCustomGroupMessageHandler((e) => handlePresenceMessages(e));
@@ -64,12 +59,8 @@ export function addSpray(
       .lookup(`[${timestamp},[${offset[0]},${offset[1]}],${sprayType}]`)
   )
     return;
-  console.log(getObject(OBJECT_ID));
   canvas.addSpray(timestamp, offset, sprayType);
-  node.updateObject(
-    canvas,
-    `addSpray(${timestamp},[${offset}],[${sprayType}])`,
-  );
+  node.updateObject(canvas, `addSpray(${timestamp},[${offset}],${sprayType})`);
 }
 
 export function sendPresence(player: Player) {
