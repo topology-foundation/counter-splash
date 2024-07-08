@@ -6,7 +6,7 @@
   import { AutoColliders } from "@threlte/rapier";
   import * as THREE from "three";
   import { get } from "svelte/store";
-  import { generateRandomPixels, initPixelToImage } from "$lib/handler";
+  import { initPixelToImage } from "$lib/handler";
   import { interactivity } from "@threlte/extras";
   interactivity();
 
@@ -44,7 +44,6 @@
       texture.needsUpdate = true;
     });
     initPixelToImage("/DrawHere.png");
-    //generateRandomPixels(width, height, width * height * 4);
   });
 </script>
 

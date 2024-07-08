@@ -1,28 +1,4 @@
-import { updatePixels } from "./store/wall";
-
-export function generateRandomPixels(
-  width: number,
-  height: number,
-  count: number,
-) {
-  const updates = [];
-  for (let i = 0; i < count; i++) {
-    const x = Math.floor(Math.random() * width);
-    const y = Math.floor(Math.random() * height);
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    const a = 255;
-    // updates.push({ x, y, r, g, b, a });
-  }
-
-  for (let i = 500; i < 1000; i++) {
-    for (let j = 500; j < 1000; j++) {
-      updates.push(i, j, 255, 255, 255, 255);
-    }
-  }
-  updatePixels(updates);
-}
+import { updatePixels, width, height } from "./store/wall";
 
 export function initPixelToImage(imageUrl: string) {
   // Create an image element
@@ -36,6 +12,11 @@ export function initPixelToImage(imageUrl: string) {
     // Create a canvas element
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      console.error("Failed to get 2D context");
+      return;
+    }
 
     // Set the canvas dimensions to match the image
     canvas.width = image.width;
@@ -67,5 +48,61 @@ export function initPixelToImage(imageUrl: string) {
 
     // 'updates' array now contains pixel data for the entire image
     updatePixels(updates);
+  };
+}
+
+export function sprayCanvas(
+  imageUrl: string,
+  offsetX: number,
+  offsetY: number,
+) {
+  const IMAGE_SIZE = 256;
+  const image = new Image();
+
+  image.src = imageUrl;
+
+  image.onload = () => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      console.error("Failed to get 2D context");
+      return;
+    }
+
+    canvas.width = IMAGE_SIZE;
+    canvas.height = IMAGE_SIZE;
+
+    ctx.drawImage(image, 0, 0, IMAGE_SIZE, IMAGE_SIZE);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+
+    const updates = [];
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const a = data[i + 3];
+
+      if (a === 0) continue; // Skip transparent pixels
+
+      const x = offsetX - IMAGE_SIZE / 2 + ((i / 4) % canvas.width);
+      const y =
+        offsetY -
+        IMAGE_SIZE / 2 +
+        canvas.height -
+        Math.floor(i / 4 / canvas.width);
+
+      // Ensure coordinates are within bounds
+      if (x >= 0 && x < width && y >= 0 && y < height) {
+        updates.push({ x, y, r, g, b, a });
+      }
+    }
+
+    updatePixels(updates);
+  };
+  image.onerror = () => {
+    console.error(`Failed to load image: ${imageUrl}`);
   };
 }
