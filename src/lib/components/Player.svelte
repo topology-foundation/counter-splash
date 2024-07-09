@@ -31,8 +31,11 @@
   let maxSprayDistance = 20;
   let radius = 0.3;
   let h = 1.7;
-  export let speed = 6;
-  let jumpForce = 10;
+
+  // parameters that control the pace of movement
+  export let speed = 9;
+  let jumpForce = 25;
+  let gravityScale = 7;
 
   let rigidBody: RapierRigidBody;
   let lock: () => void;
@@ -210,7 +213,7 @@
   <RigidBody
     bind:rigidBody
     enabledRotations={[false, false, false]}
-    gravityScale={1.5}
+    gravityScale={gravityScale}
   >
     <CollisionGroups groups={[0]}>
       <Collider
