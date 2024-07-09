@@ -34,8 +34,10 @@
 
   // parameters that control the pace of movement
   export let speed = 9;
-  let jumpForce = 25;
-  let gravityScale = 7;
+  const jumpForce = 25;
+  const gravityScale = 7;
+  const dashFrameCountMax = 4;
+  const dashSpeedMultiplier = 20;
 
   let rigidBody: RapierRigidBody;
   let lock: () => void;
@@ -46,7 +48,12 @@
   const t = new Vector3();
   const { scene } = useThrelte();
   const raycaster = new Raycaster();
+
+  // some stats
   let touchingGround = false;
+  let dashCharged = true;
+  let dashFrameCount = dashFrameCountMax;
+
   const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
 
   const { onKeyDown, onKeyUp, getControls } = createEventHandlers();
@@ -72,8 +79,8 @@
 
   useTask(() => {
     if (!rigidBody) return;
-    const { forward, backward, left, right, jump } = getControls();
-    handleMovement(forward, backward, left, right, jump);
+    const { forward, backward, left, right, jump, dash } = getControls();
+    handleMovement(forward, backward, left, right, jump, dash);
     handleGrounding();
     handleOutOfBounds();
     const currentPlayerPosition = get(playerPosition);
@@ -91,17 +98,59 @@
     left: number,
     right: number,
     jump: boolean,
+    dash: boolean,
   ) {
+    console.log('handleMovement: jump',jump,' dash',dash);
     const velVec = t.set(right - left, 0, backward - forward);
     velVec.applyEuler(cam.rotation).multiplyScalar(speed);
     const linVel = rigidBody.linvel();
     t.y = linVel.y;
+
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
+
+    if (touchingGround) {
+      dashCharged = true;
+      dash = false;
+      dashFrameCount = dashFrameCountMax;
+    }
+    else {
+      t.x = linVel.x;
+      t.y = linVel.y;
+
+      if (!dashCharged){
+        if (dashFrameCount>0){
+          t.z = linVel.z;
+          dashFrameCount -= 1;
+        }
+        else {
+          t.z = 0;
+        }
+      }
+      else {
+        t.z = linVel.z;
+      }
+    }
+
     if (jump && touchingGround) {
       t.y = jumpForce;
       jump = false;
     }
+
+    if (dash && !touchingGround && dashCharged) {
+      // set z velocity
+      const dashVelVec = t.set(0, 0, -1); // dashing frontward
+      dashVelVec.applyEuler(cam.rotation).multiplyScalar(speed * dashSpeedMultiplier);
+
+      // retain x (left-right) & y (vertical) velocity
+      const linVel = rigidBody.linvel();
+      t.x = linVel.x;
+      t.y = linVel.y;
+
+      dash = false;
+      dashCharged = false;
+    }
+
     rigidBody.setLinvel(t, true);
   }
 

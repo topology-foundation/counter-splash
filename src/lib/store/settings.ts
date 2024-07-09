@@ -8,6 +8,7 @@ export interface KeyMapping {
   left: string;
   right: string;
   jump: string;
+  dash: string;
   debug: string;
   paint: string;
 }
@@ -19,6 +20,7 @@ export const keyMapping: { [x: string]: KeyMapping } = {
     left: "a",
     right: "d",
     jump: " ",
+    dash: "q",
     debug: "i",
     paint: "e",
   },
@@ -28,6 +30,7 @@ export const keyMapping: { [x: string]: KeyMapping } = {
     left: "a",
     right: "e",
     jump: " ",
+    dash: "r",
     debug: "c",
     paint: ".",
   },
@@ -37,6 +40,7 @@ export const keyMapping: { [x: string]: KeyMapping } = {
     left: "q",
     right: "d",
     jump: " ",
+    dash: "r",
     debug: "i",
     paint: "e",
   },

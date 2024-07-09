@@ -9,6 +9,7 @@ export function createEventHandlers() {
   let left = 0;
   let right = 0;
   let jump = false;
+  let dash = false;
 
   function onKeyDown(e: KeyboardEvent) {
     const selectedKey = get(selectedKeyboard);
@@ -34,6 +35,9 @@ export function createEventHandlers() {
         if (e.key === mapping.jump || e.key === " ") {
           jump = true;
         }
+        break;
+      case mapping.dash:
+        dash = true;
         break;
       case mapping.debug:
         setDebugMode(!get(debugMode));
@@ -68,6 +72,9 @@ export function createEventHandlers() {
           jump = false;
         }
         break;
+      case mapping.dash:
+        dash = false;
+        break;
       default:
         break;
     }
@@ -76,6 +83,6 @@ export function createEventHandlers() {
   return {
     onKeyDown,
     onKeyUp,
-    getControls: () => ({ forward, backward, left, right, jump }),
+    getControls: () => ({ forward, backward, left, right, jump, dash }),
   };
 }
