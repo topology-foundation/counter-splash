@@ -1,7 +1,7 @@
 <script lang="ts">
   import { sprayWheel, selectedSpray } from "$lib/store/player";
 
-  const imageCount = 7;
+  const imageCount = 9;
   let spray: number = 0;
 
   function getImageSrc(index: number): string {
