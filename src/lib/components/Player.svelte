@@ -103,7 +103,7 @@
     jump: boolean,
     dash: boolean,
   ) {
-    console.log('handleMovement: jump',jump,' dash',dash);
+    console.log("handleMovement: jump", jump, " dash", dash);
     const velVec = t.set(right - left, 0, backward - forward);
     velVec.applyEuler(cam.rotation).multiplyScalar(speed);
     const linVel = rigidBody.linvel();
@@ -116,26 +116,23 @@
       dashCharged = true;
       dash = false;
       dashFrameCount = dashFrameCountMax;
-    }
-    else {
+    } else {
       // in the air
 
-      if (!dashCharged){
-        if (dashFrameCount>0){
+      if (!dashCharged) {
+        if (dashFrameCount > 0) {
           // air-dashing => decrement dashFrameCount, retain velocity
           t.x = linVel.x;
           t.y = linVel.y;
           t.z = linVel.z;
           dashFrameCount -= 1;
-        }
-        else {
+        } else {
           // air-dash depleted => set x & z velocity to 0, retain vertical velocity
           t.x = 0;
           t.y = linVel.y;
           t.z = 0;
         }
-      }
-      else {
+      } else {
         // in the middle of a jump => retain velocity
         t.x = linVel.x;
         t.y = linVel.y;
@@ -153,7 +150,9 @@
     if (dash && !touchingGround && dashCharged) {
       // compute air-dash velocity vector
       const dashVelVec = t.set(0, 0, -1); // dashing forward
-      dashVelVec.applyEuler(cam.rotation).multiplyScalar(speed * dashSpeedMultiplier);
+      dashVelVec
+        .applyEuler(cam.rotation)
+        .multiplyScalar(speed * dashSpeedMultiplier);
 
       // add existing velocity
       const linVel = rigidBody.linvel();
@@ -301,7 +300,7 @@
   <RigidBody
     bind:rigidBody
     enabledRotations={[false, false, false]}
-    gravityScale={gravityScale}
+    {gravityScale}
   >
     <CollisionGroups groups={[0]}>
       <Collider
