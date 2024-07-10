@@ -31,8 +31,13 @@
   let maxSprayDistance = 20;
   let radius = 0.3;
   let h = 1.7;
-  export let speed = 6;
-  let jumpForce = 10;
+
+  // parameters that control the pace of movement
+  export let speed = 9;
+  const jumpForce = 25;
+  const gravityScale = 7;
+  const dashFrameCountMax = 3;
+  const dashSpeedMultiplier = 6;
 
   let rigidBody: RapierRigidBody;
   let lock: () => void;
@@ -43,7 +48,12 @@
   const t = new Vector3();
   const { scene } = useThrelte();
   const raycaster = new Raycaster();
+
+  // some stats
   let touchingGround = false;
+  let dashCharged = true;
+  let dashFrameCount = dashFrameCountMax;
+
   const coyoteFrames = 30;
   let coyoteFrameCount = coyoteFrames;
   let coyoteCountingDown = false;
@@ -72,8 +82,8 @@
 
   useTask(() => {
     if (!rigidBody) return;
-    const { forward, backward, left, right, jump } = getControls();
-    handleMovement(forward, backward, left, right, jump);
+    const { forward, backward, left, right, jump, dash } = getControls();
+    handleMovement(forward, backward, left, right, jump, dash);
     handleGrounding();
     handleOutOfBounds();
     const currentPlayerPosition = get(playerPosition);
@@ -91,17 +101,70 @@
     left: number,
     right: number,
     jump: boolean,
+    dash: boolean,
   ) {
+    console.log("handleMovement: jump", jump, " dash", dash);
     const velVec = t.set(right - left, 0, backward - forward);
     velVec.applyEuler(cam.rotation).multiplyScalar(speed);
     const linVel = rigidBody.linvel();
     t.y = linVel.y;
+
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
+
+    if (touchingGround) {
+      dashCharged = true;
+      dash = false;
+      dashFrameCount = dashFrameCountMax;
+    } else {
+      // in the air
+
+      if (!dashCharged) {
+        if (dashFrameCount > 0) {
+          // air-dashing => decrement dashFrameCount, retain velocity
+          t.x = linVel.x;
+          t.y = linVel.y;
+          t.z = linVel.z;
+          dashFrameCount -= 1;
+        } else {
+          // air-dash depleted => set x & z velocity to 0, retain vertical velocity
+          t.x = 0;
+          t.y = linVel.y;
+          t.z = 0;
+        }
+      } else {
+        // in the middle of a jump => retain velocity
+        t.x = linVel.x;
+        t.y = linVel.y;
+        t.z = linVel.z;
+      }
+    }
+
+    // activate jump
     if (jump && touchingGround) {
       t.y = jumpForce;
       jump = false;
     }
+
+    // activate air-dash
+    if (dash && !touchingGround && dashCharged) {
+      // compute air-dash velocity vector
+      const dashVelVec = t.set(0, 0, -1); // dashing forward
+      dashVelVec
+        .applyEuler(cam.rotation)
+        .multiplyScalar(speed * dashSpeedMultiplier);
+
+      // add existing velocity
+      const linVel = rigidBody.linvel();
+      t.x += linVel.x;
+      t.y += linVel.y;
+      t.z += linVel.z;
+
+      // housekeeping
+      dash = false;
+      dashCharged = false;
+    }
+
     rigidBody.setLinvel(t, true);
   }
 
@@ -237,7 +300,7 @@
   <RigidBody
     bind:rigidBody
     enabledRotations={[false, false, false]}
-    gravityScale={1.5}
+    {gravityScale}
   >
     <CollisionGroups groups={[0]}>
       <Collider

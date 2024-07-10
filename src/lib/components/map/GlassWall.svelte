@@ -6,7 +6,7 @@
   import { T } from "@threlte/core";
   import { AutoColliders } from "@threlte/rapier";
 
-  export let width = 10; // adjust as needed
+  export let width = 100; // adjust as needed
   export let height = 5;
   const depth = 20;
   export let position = [0, 0, 0];
