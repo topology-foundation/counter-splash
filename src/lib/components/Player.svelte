@@ -47,6 +47,7 @@
   const coyoteFrames = 30;
   let coyoteFrameCount = coyoteFrames;
   let coyoteCountingDown = false;
+  let jumpCharged = true; // can jump when jumpCharged; recharges after landing
   const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
 
   const { onKeyDown, onKeyUp, getControls } = createEventHandlers();
@@ -98,10 +99,18 @@
     t.y = linVel.y;
     const pos = rigidBody.translation();
     position = [pos.x, pos.y, pos.z];
-    if (jump && touchingGround) {
+
+    // can jump; deplete jumpCharged
+    if (jump && touchingGround && jumpCharged) {
       t.y = jumpForce;
       jump = false;
+      jumpCharged = false;
     }
+    // recharge jumpCharged
+    if (!touchingGround && !coyoteCountingDown){
+      jumpCharged = true;
+    }
+
     rigidBody.setLinvel(t, true);
   }
 
@@ -126,7 +135,7 @@
     }
     if (coyoteCountingDown) {
       coyoteFrameCount -= 1;
-      if (coyoteFrameCount == 0) {
+      if (!jumpCharged || coyoteFrameCount == 0) {
         coyoteCountingDown = false; // stop counting down
         coyoteFrameCount = coyoteFrames; // reset
         coyoteGrounded = false; // coyote time has passed
