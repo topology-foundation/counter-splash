@@ -44,6 +44,9 @@
   const { scene } = useThrelte();
   const raycaster = new Raycaster();
   let touchingGround = false;
+  const coyoteFrames = 30;
+  let coyoteFrameCount = coyoteFrames;
+  let coyoteCountingDown = false;
   const zoomLevel = tweened(1, { duration: 500, easing: cubicOut });
 
   const { onKeyDown, onKeyUp, getControls } = createEventHandlers();
@@ -104,10 +107,33 @@
 
   function handleGrounding() {
     const pos = rigidBody.translation();
+
+    // Scenario 1: being vertically (y-axis) close to the ground is considered grounded
+    // this helps enable bunny hops
     raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
     const intersects = raycaster.intersectObject(scene, true);
-    touchingGround =
-      intersects.length > 0 && intersects[0].distance < h / 2 + 0.5;
+    const bhopGrounded = intersects.length > 0 && intersects[0].distance < h / 2 + 0.5;
+
+    // Scenario 2: coyote time
+    // https://en.wiktionary.org/wiki/coyote_time
+    let coyoteGrounded = false;
+    if (touchingGround && !bhopGrounded) {
+        // We are at the frame where we are bhopGrounded, but the next frame we won't be,
+        // meaning we are about to leave a platform e.g. walking off a ledge
+        coyoteGrounded = true;
+        coyoteCountingDown = true;
+    }
+    if (coyoteCountingDown) {
+        coyoteFrameCount -= 1;
+        if (coyoteFrameCount == 0) {
+            coyoteCountingDown = false; // stop counting down
+            coyoteFrameCount = coyoteFrames; // reset
+            coyoteGrounded = false; // coyote time has passed
+        }
+    }
+
+    // Aggregate scenario 1 & 2
+    touchingGround = bhopGrounded || coyoteGrounded;
   }
 
   function handleOutOfBounds() {
