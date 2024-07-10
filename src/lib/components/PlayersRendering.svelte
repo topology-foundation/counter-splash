@@ -78,7 +78,7 @@
     >
       <T.Mesh>
         <T.SphereGeometry args={[0.5, 32, 32]} position={[0, 1, 0]} />
-        <T.MeshBasicMaterial color={stringToColor(nodeId)} />
+        <T.MeshBasicMaterial color={stringToColor(player.id)} />
       </T.Mesh>
     </T.Group>
   {/each}
