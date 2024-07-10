@@ -36,8 +36,8 @@
   export let speed = 9;
   const jumpForce = 25;
   const gravityScale = 7;
-  const dashFrameCountMax = 4;
-  const dashSpeedMultiplier = 20;
+  const dashFrameCountMax = 3;
+  const dashSpeedMultiplier = 6;
 
   let rigidBody: RapierRigidBody;
   let lock: () => void;
@@ -115,38 +115,50 @@
       dashFrameCount = dashFrameCountMax;
     }
     else {
-      t.x = linVel.x;
-      t.y = linVel.y;
+      // in the air
 
       if (!dashCharged){
         if (dashFrameCount>0){
+          // air-dashing => decrement dashFrameCount, retain velocity
+          t.x = linVel.x;
+          t.y = linVel.y;
           t.z = linVel.z;
           dashFrameCount -= 1;
         }
         else {
+          // air-dash depleted => set x & z velocity to 0, retain vertical velocity
+          t.x = 0;
+          t.y = linVel.y;
           t.z = 0;
         }
       }
       else {
+        // in the middle of a jump => retain velocity
+        t.x = linVel.x;
+        t.y = linVel.y;
         t.z = linVel.z;
       }
     }
 
+    // activate jump
     if (jump && touchingGround) {
       t.y = jumpForce;
       jump = false;
     }
 
+    // activate air-dash
     if (dash && !touchingGround && dashCharged) {
-      // set z velocity
-      const dashVelVec = t.set(0, 0, -1); // dashing frontward
+      // compute air-dash velocity vector
+      const dashVelVec = t.set(0, 0, -1); // dashing forward
       dashVelVec.applyEuler(cam.rotation).multiplyScalar(speed * dashSpeedMultiplier);
 
-      // retain x (left-right) & y (vertical) velocity
+      // add existing velocity
       const linVel = rigidBody.linvel();
-      t.x = linVel.x;
-      t.y = linVel.y;
+      t.x += linVel.x;
+      t.y += linVel.y;
+      t.z += linVel.z;
 
+      // housekeeping
       dash = false;
       dashCharged = false;
     }
