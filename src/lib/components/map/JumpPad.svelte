@@ -4,7 +4,7 @@
   export let position;
 </script>
 
-<AutoColliders shape={"cuboid"} friction={0}>
+<AutoColliders shape={"cuboid"} friction={0} restitution={3}>
   <T.Mesh {position}>
     <T.BoxGeometry args={[4, 0.2, 4]} />
     <T.MeshStandardMaterial color="#808080" />
