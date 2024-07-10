@@ -107,7 +107,7 @@
       jumpCharged = false;
     }
     // recharge jumpCharged
-    if (!touchingGround && !coyoteCountingDown){
+    if (!touchingGround && !coyoteCountingDown) {
       jumpCharged = true;
     }
 
