@@ -7,7 +7,6 @@
 
 <T.Group>
   <ObstaclePlatforms />
-  <Level1Walls />
   <GenericPlaform position={[-11, -8, 23]} />
   <GenericPlaform position={[-30, -8, 61]} />
   <GenericPlaform position={[-22, -8, 42]} />
