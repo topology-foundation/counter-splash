@@ -112,24 +112,25 @@
     // this helps enable bunny hops
     raycaster.set(new Vector3(pos.x, pos.y, pos.z), new Vector3(0, -1, 0));
     const intersects = raycaster.intersectObject(scene, true);
-    const bhopGrounded = intersects.length > 0 && intersects[0].distance < h / 2 + 0.5;
+    const bhopGrounded =
+      intersects.length > 0 && intersects[0].distance < h / 2 + 0.5;
 
     // Scenario 2: coyote time
     // https://en.wiktionary.org/wiki/coyote_time
     let coyoteGrounded = false;
     if (touchingGround && !bhopGrounded) {
-        // We are at the frame where we are bhopGrounded, but the next frame we won't be,
-        // meaning we are about to leave a platform e.g. walking off a ledge
-        coyoteGrounded = true;
-        coyoteCountingDown = true;
+      // We are at the frame where we are bhopGrounded, but the next frame we won't be,
+      // meaning we are about to leave a platform e.g. walking off a ledge
+      coyoteGrounded = true;
+      coyoteCountingDown = true;
     }
     if (coyoteCountingDown) {
-        coyoteFrameCount -= 1;
-        if (coyoteFrameCount == 0) {
-            coyoteCountingDown = false; // stop counting down
-            coyoteFrameCount = coyoteFrames; // reset
-            coyoteGrounded = false; // coyote time has passed
-        }
+      coyoteFrameCount -= 1;
+      if (coyoteFrameCount == 0) {
+        coyoteCountingDown = false; // stop counting down
+        coyoteFrameCount = coyoteFrames; // reset
+        coyoteGrounded = false; // coyote time has passed
+      }
     }
 
     // Aggregate scenario 1 & 2
