@@ -75,18 +75,18 @@
   {#each playerArray as player (player.id)}
   <T.Group
   >
-  <T.Mesh 
-  position={[player.position.x, player.position.y, player.position.z]}
+  <T.Mesh
+  position={[player.position.x, player.position.y+0.5, player.position.z]}
   >
     <T.SphereGeometry args={[0.5, 32, 32]} position={[0, 1, 0]} />
     <T.MeshBasicMaterial color={stringToColor(nodeId)} />
   </T.Mesh>
-  <T.Mesh 
-  position={[player.position.x, player.position.y - 1.4, player.position.z]}
+  <T.Mesh
+  position={[player.position.x, player.position.y-0.055, player.position.z]}
   >
-    <T.BoxGeometry args={[1, 2, 1]} position={[0, 0, 0]} />
+    <T.ConeGeometry args={[0.5, 1.5]} position={[0, 0, 0]} />
     <T.MeshBasicMaterial color={stringToColor(nodeId)} />
-  
+
   </T.Mesh>
   </T.Group>
   {/each}
