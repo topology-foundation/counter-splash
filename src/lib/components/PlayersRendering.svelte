@@ -79,13 +79,13 @@
   position={[player.position.x, player.position.y+0.5, player.position.z]}
   >
     <T.SphereGeometry args={[0.5, 32, 32]} position={[0, 1, 0]} />
-    <T.MeshBasicMaterial color={stringToColor(nodeId)} />
+    <T.MeshBasicMaterial color={stringToColor(player.id)} />
   </T.Mesh>
   <T.Mesh
   position={[player.position.x, player.position.y-0.055, player.position.z]}
   >
     <T.ConeGeometry args={[0.5, 1.5]} position={[0, 0, 0]} />
-    <T.MeshBasicMaterial color={stringToColor(nodeId)} />
+    <T.MeshBasicMaterial color={stringToColor(player.id)} />
 
   </T.Mesh>
   </T.Group>
